@@ -12,7 +12,11 @@ import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
 fun Navigation(
     navController: NavHostController
 ){
-    NavHost(navController = navController, startDestination = Screen.ScheduleScreen.route + "0"){
+    NavHost(navController = navController, startDestination = Screen.ScheduleScreen.route){
+        composable(Screen.ScheduleScreen.route){
+            ScheduleScreen(navController = navController)
+        }
+
         composable(
             route = Screen.ScheduleScreen.route + "/{scheduleID}",
             arguments = listOf(
@@ -21,7 +25,8 @@ fun Navigation(
                 }
             )
         ){
-            ScheduleScreen(navController = navController)
+            val id = it.arguments?.getInt("scheduleID")
+            ScheduleScreen(navController = navController, scheduleID = id ?: -1)
         }
 
         composable(Screen.TimeScheduleScreen.route){
@@ -29,9 +34,12 @@ fun Navigation(
         }
 
         composable(
-            route = Screen.LessonsScreen.route + "/{scheduleID}",
+            route = Screen.LessonsScreen.route + "/{scheduleID}/{referredSubjectID}",
             arguments = listOf(
                 navArgument("scheduleID"){
+                    type = NavType.IntType
+                },
+                navArgument("referredSubjectID"){
                     type = NavType.IntType
                 }
             )

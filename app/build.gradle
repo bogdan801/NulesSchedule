@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.prosto_key.nulesschedule"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -106,4 +106,10 @@ dependencies {
     //dataStore
     def datastore_version = "1.0.0"
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
+    //apachePoi
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
+    implementation group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '5.0.3'
+    implementation 'javax.xml.stream:stax-api:1.0'
+    implementation 'com.fasterxml:aalto-xml:1.2.2'
 }
