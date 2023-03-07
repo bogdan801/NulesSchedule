@@ -9,6 +9,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import com.prosto_key.nulesschedule.data.repository.RepositoryImpl
+import com.prosto_key.nulesschedule.domain.repository.Repository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,4 +31,10 @@ object AppModule {
 
     @Provides
     fun provideDao(db: Database) = db.dbDao
+
+    @Provides
+    @Singleton
+    fun provideRepository(db: Database): Repository {
+        return RepositoryImpl(db.dbDao)
+    }
 }
