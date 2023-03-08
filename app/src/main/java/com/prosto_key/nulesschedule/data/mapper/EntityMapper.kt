@@ -110,4 +110,3 @@ fun ScheduleWithLessonsJunction.toSchedule() = Schedule(
     group = scheduleEntity.group,
     week = lessons.toWeek()
 )
-

@@ -16,6 +16,7 @@ import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 class RepositoryImpl(private val dao: Dao):Repository {
     //insert/edit
@@ -88,7 +89,7 @@ class RepositoryImpl(private val dao: Dao):Repository {
     }
 
     //read excel
-    override suspend fun readScheduleFromExcel(): Schedule {
+    override suspend fun readScheduleFromExcel(workbook: XSSFWorkbook): Schedule {
         TODO("Not yet implemented")
     }
 }

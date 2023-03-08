@@ -6,6 +6,7 @@ import com.prosto_key.nulesschedule.domain.model.Teacher
 import com.prosto_key.nulesschedule.domain.model.time_schedule.LessonTime
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import kotlinx.coroutines.flow.Flow
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 interface Repository {
     //insert/edit
@@ -24,5 +25,5 @@ interface Repository {
     fun getTimeScheduleFlow(): Flow<TimeSchedule>
 
     //read excel
-    suspend fun readScheduleFromExcel(): Schedule
+    suspend fun readScheduleFromExcel(workbook: XSSFWorkbook): Schedule
 }

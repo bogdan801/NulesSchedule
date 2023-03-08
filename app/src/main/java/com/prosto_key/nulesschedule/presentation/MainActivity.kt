@@ -1,42 +1,27 @@
 package com.prosto_key.nulesschedule.presentation
 
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.rememberNavController
-import com.prosto_key.nulesschedule.data.local.database.Dao
-import com.prosto_key.nulesschedule.data.local.database.Database
-import com.prosto_key.nulesschedule.data.local.database.entities.TimeScheduleEntity
-import com.prosto_key.nulesschedule.data.util.cutSubjectNameFromLesson
-import com.prosto_key.nulesschedule.data.util.levenshtein
-import com.prosto_key.nulesschedule.data.util.similarityRatio
-import com.prosto_key.nulesschedule.domain.model.Lesson
-import com.prosto_key.nulesschedule.domain.model.Schedule
-import com.prosto_key.nulesschedule.domain.model.time_schedule.LessonTime
-import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
-import com.prosto_key.nulesschedule.domain.model.week.Day
-import com.prosto_key.nulesschedule.domain.model.week.Week
+import com.prosto_key.nulesschedule.data.local.excel_parsing.*
 import com.prosto_key.nulesschedule.domain.repository.Repository
-import com.prosto_key.nulesschedule.presentation.navigation.Navigation
 import com.prosto_key.nulesschedule.presentation.theme.NulesScheduleTheme
 import com.prosto_key.nulesschedule.presentation.util.LockScreenOrientation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,6 +29,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var repo: Repository
+
+    @Inject
+    lateinit var workbookState: MutableState<XSSFWorkbook>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -280,45 +268,128 @@ class MainActivity : ComponentActivity() {
             )
         )*/
 
-        lateinit var timeSchedule: Flow<TimeSchedule>
-        runBlocking {
-            timeSchedule = repo.getTimeScheduleFlow()
+        val openFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri = result.data?.data!!
+
+                with(contentResolver.openInputStream(uri)){
+                    if(this != null){
+                        workbookState.value = XSSFWorkbook(this)
+                        Toast.makeText(this@MainActivity, "Файл відкрито", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
         setContent {
             LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             NulesScheduleTheme {
-                //Navigation(navController = rememberNavController())
-                val schedule by timeSchedule.collectAsState(initial = TimeSchedule(listOf()))
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                ) {
-                    schedule.lessonsTime.forEachIndexed { index, time ->
-                        Text(text = "${index+1}. ${time.start} - ${time.end}")
+                val buffer = remember {
+                    mutableStateOf(ScheduleFileBuffer())
+                }
+
+                val majors by remember {
+                    derivedStateOf {
+                        if(workbookState.value.numberOfSheets > 0) getMajorsFromWorkBook(workbookState.value, 0, buffer)
+                        else listOf()
                     }
+                }
+                var selectedMajor by remember { mutableStateOf(0) }
 
-                    var start by remember { mutableStateOf("")}
-                    var end by remember { mutableStateOf("")}
-                    var index by remember { mutableStateOf("1")}
-                    TextField(modifier = Modifier.fillMaxWidth(), value = index, onValueChange = {index = it})
-                    TextField(modifier = Modifier.fillMaxWidth(), value = start, onValueChange = {start = it})
-                    TextField(modifier = Modifier.fillMaxWidth(), value = end, onValueChange = {end = it})
+                val years by remember {
+                    derivedStateOf {
+                        if(workbookState.value.numberOfSheets > 0) getYearsFromMajor(buffer.value, majors, selectedMajor)
+                        else listOf()
+                    }
+                }
 
-                    Button(
-                        onClick = {
-                            lifecycleScope.launch {
-                                repo.editTimeScheduleLesson(index.toInt()-1, LessonTime(start = start, end = end))
+                var selectedYear by remember { mutableStateOf(0) }
+
+                val groups by remember {
+                    derivedStateOf {
+                        if(workbookState.value.numberOfSheets > 0) {
+                            getGroupsFromMajorAndYear(
+                                buffer.value,
+                                majors,
+                                selectedMajor,
+                                years,
+                                selectedYear
+                            )
+                        }
+                        else listOf()
+                    }
+                }
+
+                var selectedGroup by remember { mutableStateOf(0) }
+
+                val week by remember {
+                    derivedStateOf {
+                        if(majors.isNotEmpty() && years.isNotEmpty() && groups.isNotEmpty()){
+                            getWeek(workbookState.value, 0, majors[selectedMajor], years[selectedYear], groups[selectedGroup])
+                        }
+                        else null
+                    }
+                }
+
+                //Navigation(navController = rememberNavController(), launcher = openFileLauncher)
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Button(onClick = {
+                        lifecycleScope.launch {
+                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            }
+
+                            openFileLauncher.launch(intent)
+                        }
+                    }) {
+                        Text(text = "Open")
+                    }
+                    majors.forEachIndexed { index, major ->
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    selectedYear = 0
+                                    selectedMajor = index
+                                },
+                            text = major
+                        )
+                    }
+                    Text("---------${if(majors.isNotEmpty())majors[selectedMajor] else "-"}---------")
+                    years.forEachIndexed { index, year ->
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    selectedGroup = 0
+                                    selectedYear = index
+                                },
+                            text = year
+                        )
+                    }
+                    Text("---------${if(years.isNotEmpty())years[selectedYear] else "-"}---------")
+                    groups.forEachIndexed { index, group ->
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    selectedGroup = index
+                                },
+                            text = group
+                        )
+                    }
+                    Text("---------${if(groups.isNotEmpty())groups[selectedGroup] else "-"}---------")
+                    if(week != null){
+                        week!!.days[0].numeratorLessons.forEach { lesson ->
+                            if(lesson == null){
+                                Text("-")
+                            }
+                            else{
+                                Text(lesson.lessonName)
                             }
                         }
-                    ) {
-                        Text(text = "Edit")
                     }
                 }
             }
         }
     }
 }
-
-

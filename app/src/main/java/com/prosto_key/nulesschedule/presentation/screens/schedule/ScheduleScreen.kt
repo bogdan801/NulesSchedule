@@ -1,5 +1,7 @@
 package com.prosto_key.nulesschedule.presentation.screens.schedule
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,7 @@ import com.prosto_key.nulesschedule.presentation.navigation.Screen
 @Composable
 fun ScheduleScreen(
     navController: NavHostController,
+    launcher: ActivityResultLauncher<Intent>,
     scheduleID: Int = -1
 ) {
     Box(

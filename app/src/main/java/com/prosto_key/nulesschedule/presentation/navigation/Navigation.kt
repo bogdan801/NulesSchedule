@@ -1,20 +1,25 @@
 package com.prosto_key.nulesschedule.presentation.navigation
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 @Composable
 fun Navigation(
-    navController: NavHostController
+    navController: NavHostController,
+    launcher: ActivityResultLauncher<Intent>
 ){
     NavHost(navController = navController, startDestination = Screen.ScheduleScreen.route){
         composable(Screen.ScheduleScreen.route){
-            ScheduleScreen(navController = navController)
+            ScheduleScreen(navController = navController, launcher)
         }
 
         composable(
@@ -26,7 +31,7 @@ fun Navigation(
             )
         ){
             val id = it.arguments?.getInt("scheduleID")
-            ScheduleScreen(navController = navController, scheduleID = id ?: -1)
+            ScheduleScreen(navController = navController, launcher = launcher, scheduleID = id ?: -1)
         }
 
         composable(Screen.TimeScheduleScreen.route){
@@ -48,7 +53,7 @@ fun Navigation(
         }
 
         composable(Screen.ArchiveScreen.route){
-            //ArchiveScreen(navController = navController, launcher = launcher, workbook = workbook)
+            //ArchiveScreen(navController = navController, launcher = launcher)
         }
     }
 }
