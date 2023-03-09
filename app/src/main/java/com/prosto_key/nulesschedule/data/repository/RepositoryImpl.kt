@@ -1,10 +1,13 @@
 package com.prosto_key.nulesschedule.data.repository
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.prosto_key.nulesschedule.data.local.database.Dao
 import com.prosto_key.nulesschedule.data.local.database.entities.LessonEntity
 import com.prosto_key.nulesschedule.data.local.database.entities.SubjectEntity
 import com.prosto_key.nulesschedule.data.local.database.entities.TeachersOfSubjectEntity
 import com.prosto_key.nulesschedule.data.local.database.entities.TimeScheduleEntity
+import com.prosto_key.nulesschedule.data.local.excel_parsing.*
 import com.prosto_key.nulesschedule.data.mapper.*
 import com.prosto_key.nulesschedule.data.util.cutSubjectNameFromLesson
 import com.prosto_key.nulesschedule.data.util.isSimilarTo
@@ -13,6 +16,7 @@ import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.model.Teacher
 import com.prosto_key.nulesschedule.domain.model.time_schedule.LessonTime
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
+import com.prosto_key.nulesschedule.domain.model.week.Week
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -89,7 +93,14 @@ class RepositoryImpl(private val dao: Dao):Repository {
     }
 
     //read excel
-    override suspend fun readScheduleFromExcel(workbook: XSSFWorkbook): Schedule {
-        TODO("Not yet implemented")
-    }
+    private val fileBuffer: MutableState<ScheduleFileBuffer> = mutableStateOf(ScheduleFileBuffer())
+
+    override fun readMajorsFromFile(workbook: XSSFWorkbook, sheet: Int)
+        = getMajorsFromWorkBook(workbook, sheet, fileBuffer)
+    override fun readYearsOfMajor(majorList: List<String>, majorID: Int)
+        = getYearsFromMajor(fileBuffer.value, majorList, majorID)
+    override fun readGroupsFromMajorAndYear(majorList: List<String>, majorID: Int, yearList: List<String>, yearID: Int)
+        = getGroupsFromMajorAndYear(fileBuffer.value, majorList, majorID, yearList, yearID)
+    override fun readWeekFromFile(workbook: XSSFWorkbook, sheet: Int, major: String, year: String, group: String) =
+        getWeek(workbook, sheet, major, year, group)
 }

@@ -15,11 +15,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
 import com.prosto_key.nulesschedule.data.local.excel_parsing.*
 import com.prosto_key.nulesschedule.domain.repository.Repository
+import com.prosto_key.nulesschedule.presentation.navigation.Navigation
 import com.prosto_key.nulesschedule.presentation.theme.NulesScheduleTheme
 import com.prosto_key.nulesschedule.presentation.util.LockScreenOrientation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
@@ -284,13 +287,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             NulesScheduleTheme {
-                val buffer = remember {
-                    mutableStateOf(ScheduleFileBuffer())
-                }
-
-                val majors by remember {
+                Navigation(navController = rememberNavController(), launcher = openFileLauncher)
+                /*val majors by remember {
                     derivedStateOf {
-                        if(workbookState.value.numberOfSheets > 0) getMajorsFromWorkBook(workbookState.value, 0, buffer)
+                        if(workbookState.value.numberOfSheets > 0) repo.readMajorsFromFile(workbookState.value, 0)
                         else listOf()
                     }
                 }
@@ -298,7 +298,7 @@ class MainActivity : ComponentActivity() {
 
                 val years by remember {
                     derivedStateOf {
-                        if(workbookState.value.numberOfSheets > 0) getYearsFromMajor(buffer.value, majors, selectedMajor)
+                        if(workbookState.value.numberOfSheets > 0) repo.readYearsOfMajor(majors, selectedMajor)
                         else listOf()
                     }
                 }
@@ -308,8 +308,7 @@ class MainActivity : ComponentActivity() {
                 val groups by remember {
                     derivedStateOf {
                         if(workbookState.value.numberOfSheets > 0) {
-                            getGroupsFromMajorAndYear(
-                                buffer.value,
+                            repo.readGroupsFromMajorAndYear(
                                 majors,
                                 selectedMajor,
                                 years,
@@ -325,13 +324,13 @@ class MainActivity : ComponentActivity() {
                 val week by remember {
                     derivedStateOf {
                         if(majors.isNotEmpty() && years.isNotEmpty() && groups.isNotEmpty()){
-                            getWeek(workbookState.value, 0, majors[selectedMajor], years[selectedYear], groups[selectedGroup])
+                            repo.readWeekFromFile(workbookState.value, 0, majors[selectedMajor], years[selectedYear], groups[selectedGroup])
                         }
                         else null
                     }
                 }
 
-                //Navigation(navController = rememberNavController(), launcher = openFileLauncher)
+
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = {
@@ -351,6 +350,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .clickable {
                                     selectedYear = 0
+                                    selectedGroup = 0
                                     selectedMajor = index
                                 },
                             text = major
@@ -388,7 +388,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                }
+                }*/
             }
         }
     }

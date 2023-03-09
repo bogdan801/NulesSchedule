@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
@@ -19,7 +22,7 @@ fun Navigation(
 ){
     NavHost(navController = navController, startDestination = Screen.ScheduleScreen.route){
         composable(Screen.ScheduleScreen.route){
-            ScheduleScreen(navController = navController, launcher)
+            ScheduleScreen(navController = navController, launcher = launcher)
         }
 
         composable(
