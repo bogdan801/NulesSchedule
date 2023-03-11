@@ -9,14 +9,11 @@ import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
-
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ScheduleViewModel
 @Inject
@@ -42,12 +39,8 @@ constructor(
         val currentScheduleId = handle.get<Int>("scheduleID") ?: -1
 
         if(currentScheduleId == -1){
-            val result = viewModelScope.async {
-                context.readIntFromDataStore("openedScheduleID")
-
-            }
-            result.invokeOnCompletion {
-                _selectedScheduleID.value = result.getCompleted() ?: -1
+            runBlocking{
+                _selectedScheduleID.value = context.readIntFromDataStore("openedScheduleID") ?: -1
             }
         }
         else{

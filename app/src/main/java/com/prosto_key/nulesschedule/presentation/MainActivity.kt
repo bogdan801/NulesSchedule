@@ -1,29 +1,21 @@
 package com.prosto_key.nulesschedule.presentation
 
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.prosto_key.nulesschedule.data.local.excel_parsing.*
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import com.prosto_key.nulesschedule.presentation.navigation.Navigation
 import com.prosto_key.nulesschedule.presentation.theme.NulesScheduleTheme
 import com.prosto_key.nulesschedule.presentation.util.LockScreenOrientation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
@@ -287,7 +279,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             NulesScheduleTheme {
+                val systemUiController = rememberSystemUiController()
+                systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
+                systemUiController.setNavigationBarColor(MaterialTheme.colors.surface)
+
                 Navigation(navController = rememberNavController(), launcher = openFileLauncher)
+
                 /*val majors by remember {
                     derivedStateOf {
                         if(workbookState.value.numberOfSheets > 0) repo.readMajorsFromFile(workbookState.value, 0)
@@ -390,6 +387,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }*/
             }
+
+
         }
     }
 }

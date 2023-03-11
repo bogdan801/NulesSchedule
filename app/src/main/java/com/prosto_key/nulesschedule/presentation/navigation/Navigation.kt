@@ -33,8 +33,7 @@ fun Navigation(
                 }
             )
         ){
-            val id = it.arguments?.getInt("scheduleID")
-            ScheduleScreen(navController = navController, launcher = launcher, scheduleID = id ?: -1)
+            ScheduleScreen(navController = navController, launcher = launcher)
         }
 
         composable(Screen.TimeScheduleScreen.route){
