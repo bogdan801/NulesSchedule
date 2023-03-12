@@ -25,6 +25,7 @@ fun CustomDropDownMenu(
     modifier: Modifier = Modifier,
     data: List<String> = listOf(),
     index: Int = 0,
+    title: String = "",
     showIcon: Boolean = true,
     showFullTextInItems: Boolean = true,
     onItemSelected: (index: Int, text: String) -> Unit = { _: Int, _: String -> }
@@ -38,13 +39,21 @@ fun CustomDropDownMenu(
         Icons.Filled.KeyboardArrowDown
 
     Column {
+        if(title.isNotBlank()){
+            Text(
+                modifier = Modifier.padding(vertical = 2.dp),
+                text = title,
+                style = MaterialTheme.typography.h4,
+                color = MaterialTheme.colors.secondary
+            )
+        }
         Box(
             modifier = modifier
                 .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.onPrimary)
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colors.secondary,
                     shape = MaterialTheme.shapes.small
                 )
                 .onGloballyPositioned { coordinates ->
@@ -61,7 +70,8 @@ fun CustomDropDownMenu(
                 text = if(data.isEmpty()) "" else data[index],
                 style = MaterialTheme.typography.h4,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colors.secondary
             )
             if(data.isNotEmpty() && showIcon){
                 Icon(
@@ -78,7 +88,7 @@ fun CustomDropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.width(with(LocalDensity.current){textFieldSize.width.toDp()}),
-            offset = DpOffset(x = 8.dp, y = (-8).dp)
+            offset = DpOffset(x = 0.dp, y = (-8).dp)
         ) {
             data.forEachIndexed { index, text ->
                 DropdownMenuItem(
@@ -88,10 +98,10 @@ fun CustomDropDownMenu(
                     }
                 ) {
                     if(showFullTextInItems){
-                        Text(text = text)
+                        Text(text = text, color = MaterialTheme.colors.secondary)
                     }
                     else{
-                        Text(text = text, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(text = text, color = MaterialTheme.colors.secondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 }
             }

@@ -19,10 +19,8 @@ fun BottomSheetMenu(
     onRightActionClick: (() -> Unit)? = {},
     leftIcon: @Composable BoxScope.() -> Unit = {},
     rightIcon: @Composable BoxScope.() -> Unit = {},
-    sheetState: BottomSheetState,
     menuItems: @Composable ColumnScope.() -> Unit = {}
 ) {
-    val scope = rememberCoroutineScope()
     Column(modifier = modifier){
         Box(modifier = Modifier
             .padding(8.dp)

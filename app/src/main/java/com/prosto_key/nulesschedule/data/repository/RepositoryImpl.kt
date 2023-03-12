@@ -19,12 +19,13 @@ import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.model.week.Week
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 class RepositoryImpl(private val dao: Dao):Repository {
     //insert/edit
-    override suspend fun insertSchedule(schedule: Schedule) {
+    override suspend fun insertSchedule(schedule: Schedule): Int {
         val scheduleID = dao.insertScheduleEntity(schedule.toScheduleEntity()).toInt()
 
         if(schedule.week != null){
@@ -55,6 +56,8 @@ class RepositoryImpl(private val dao: Dao):Repository {
                 }
             }
         }
+
+        return scheduleID
     }
 
     override suspend fun editTimeScheduleLesson(lessonNumber: Int, newTime: LessonTime) {
@@ -90,6 +93,16 @@ class RepositoryImpl(private val dao: Dao):Repository {
 
     override fun getTimeScheduleFlow(): Flow<TimeSchedule> = dao.getTimeScheduleEntities().map { entities ->
         entities.toTimeSchedule()
+    }
+
+    override suspend fun isScheduleUnique(schedule: Schedule): Boolean {
+        val dbSchedules = dao.getSchedulesEntities().first().map { it.toSchedule(null) }
+        return !dbSchedules.contains(schedule)
+    }
+
+    override suspend fun getScheduleID(schedule: Schedule): Int {
+        val found = dao.getScheduleByItsContents(schedule.fileName, schedule.major, schedule.year, schedule.group).toSchedule(null)
+        return found.scheduleID
     }
 
     //read excel

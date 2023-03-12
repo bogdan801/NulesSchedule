@@ -9,6 +9,7 @@ private val LightColorPalette = lightColors(
     primary = green_400,
     primaryVariant = green_100,
     secondary = green_800,
+    secondaryVariant = gray_700,
     background = green_50,
     surface = gray_100,
     onPrimary = Color.White,

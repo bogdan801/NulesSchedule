@@ -13,7 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 interface Repository {
     //insert/edit
-    suspend fun insertSchedule(schedule: Schedule)
+    suspend fun insertSchedule(schedule: Schedule): Int
     suspend fun editTimeScheduleLesson(lessonNumber: Int, newTime: LessonTime)
     suspend fun insertTeacherAndAddToASubject(teacher: Teacher, subjectID: Int, isLector: Boolean)
     suspend fun addToTeacherToASubject(teacherID: Int, subjectID: Int, isLector: Boolean)
@@ -26,6 +26,10 @@ interface Repository {
     suspend fun getFullSchedule(scheduleID: Int): Schedule
     fun getScheduleFlow(): Flow<List<Schedule>>
     fun getTimeScheduleFlow(): Flow<TimeSchedule>
+
+    suspend fun isScheduleUnique(schedule: Schedule): Boolean
+
+    suspend fun getScheduleID(schedule: Schedule): Int
 
     //read excel
     fun readMajorsFromFile(workbook: XSSFWorkbook, sheet: Int): List<String>

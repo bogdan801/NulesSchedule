@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -88,11 +89,10 @@ fun ScheduleScreen(
                         onRightActionClick = {
                             showAddSheet = true
                             scope.launch {
-                                delay(200)
+                                delay(400)
                                 if(sheetState.isCollapsed) sheetState.expand()
                             }
                         },
-                        sheetState = sheetState,
                         menuItems = {
                             MenuItem(
                                 modifier = Modifier.fillMaxWidth(),
@@ -157,22 +157,44 @@ fun ScheduleScreen(
                     AddScheduleSheet(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(450.dp)
+                            .height(450.dp),
+                        openedFileName = viewModel.fileName,
+                        onOpenFileClick = {
+                            viewModel.openFile(launcher)
+                        },
+                        majors = viewModel.majors.value,
+                        selectedMajor = viewModel.selectedMajor.value,
+                        onMajorSelected = { id, _ ->
+                            viewModel.selectMajor(id)
+                        },
+                        years = viewModel.years.value,
+                        selectedYear = viewModel.selectedYear.value,
+                        onYearSelected = { id, _ ->
+                            viewModel.selectYear(id)
+                        },
+                        groups = viewModel.groups.value,
+                        selectedGroup = viewModel.selectedGroup.value,
+                        onGroupSelected = { id, _ ->
+                            viewModel.selectGroup(id)
+                        },
+                        onSelectScheduleClick = {
+                            viewModel.selectSchedule()
+                            scope.launch{
+                                sheetState.collapse()
+                            }
+                        }
                     )
                 }
-
             }
-
         }
-    ) { sheetState, _ ->
-        Column(
-            modifier = Modifier.fillMaxSize(),
+    ) { _, _ ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(bottom = 90.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "${sheetState.progress.to}")
+            item {
+                Text(text = "${viewModel.week}", color = MaterialTheme.colors.secondary)
+            }
         }
-
     }
-
-
 }

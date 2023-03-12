@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.room.Room
 import com.prosto_key.nulesschedule.data.local.database.Database
+import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,5 +44,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWorkBookState(): MutableState<XSSFWorkbook> = mutableStateOf(XSSFWorkbook())
+    fun provideWorkBookState(): MutableState<WorkBook> = mutableStateOf(WorkBook(XSSFWorkbook()))
 }

@@ -64,4 +64,7 @@ interface Dao {
 
     @Query("SELECT * FROM teacherentity WHERE teacherID == :id")
     suspend fun getTeacherEntity(id: Int): TeacherEntity
+
+    @Query("SELECT * FROM scheduleentity WHERE fileName == :fileName AND major == :major AND year == :year AND `group` == :group")
+    suspend fun getScheduleByItsContents(fileName: String, major: String, year: String, group: String): ScheduleEntity
 }
