@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.presentation.composables.AddScheduleSheet
 import com.prosto_key.nulesschedule.presentation.composables.BottomSheetMenu
+import com.prosto_key.nulesschedule.presentation.composables.ScheduleViewer
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
 import com.prosto_key.nulesschedule.presentation.composables.repeatable.MenuItem
 import kotlinx.coroutines.delay
@@ -188,13 +189,13 @@ fun ScheduleScreen(
             }
         }
     ) { _, _ ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(bottom = 90.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Text(text = "${viewModel.week}", color = MaterialTheme.colors.secondary)
-            }
-        }
+        ScheduleViewer(
+            modifier = Modifier
+                .padding(top = 8.dp, bottom = 106.dp, start = 8.dp, end = 8.dp)
+                .fillMaxSize(),
+            data = viewModel.week,
+            timeSchedule = viewModel.timeSchedule,
+            currentDayTime = viewModel.currentDateTime.value
+        )
     }
 }

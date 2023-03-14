@@ -2,6 +2,7 @@ package com.prosto_key.nulesschedule.presentation.screens.schedule
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.*
@@ -11,11 +12,17 @@ import androidx.lifecycle.viewModelScope
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.datastore.saveIntToDataStore
 import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
+import com.prosto_key.nulesschedule.data.util.getCurrentDateTime
+import com.prosto_key.nulesschedule.data.util.getFractionBetween
 import com.prosto_key.nulesschedule.domain.model.Schedule
+import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.LocalDateTime
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
@@ -138,10 +145,20 @@ constructor(
         Toast.makeText(context, "Розклад відкрито і збережено", Toast.LENGTH_SHORT).show()
     }
 
-    init {
-        val currentScheduleId = handle.get<Int>("scheduleID") ?: -1
 
+    //SCHEDULE DISPLAY
+    private val _currentDateTime =  mutableStateOf(getCurrentDateTime())
+    val currentDateTime: State<LocalDateTime> = _currentDateTime
+
+    private val _timeSchedule =  mutableStateOf(TimeSchedule(listOf()))
+    val timeSchedule: State<TimeSchedule> = _timeSchedule
+
+    init {
+        //selected value
+        val currentScheduleId = handle.get<Int>("scheduleID") ?: -1
+        //if selected value = -1 (app just launched)
         if(currentScheduleId == -1){
+            //reading from datastore
             runBlocking{
                 _selectedScheduleID.value = context.readIntFromDataStore("openedScheduleID") ?: -1
             }
@@ -150,10 +167,25 @@ constructor(
             _selectedScheduleID.value = currentScheduleId
         }
 
+        //reading schedule from database
         if(_selectedScheduleID.value != -1){
             viewModelScope.launch {
                 schedule.value = repository.getFullSchedule(_selectedScheduleID.value)
             }
+        }
+
+        //datetime update once a minute
+        viewModelScope.launch {
+            while(true){
+                delay((59 - _currentDateTime.value.second) * 1000L)
+                _currentDateTime.value = getCurrentDateTime()
+            }
+        }
+
+        //reading timeschedule from database
+        viewModelScope.launch {
+            _timeSchedule.value = repository.getTimeScheduleFlow().first()
+            println("[eq")
         }
     }
 }
