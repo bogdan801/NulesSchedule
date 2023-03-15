@@ -17,15 +17,29 @@ fun LocalDateTime.dayOfWeekToString(): String = when(this.dayOfWeek){
     DayOfWeek.SUNDAY    -> "Неділя"
 }
 
-fun Int.getDayOfWeekName() = when(this % 7){
-    0 -> "Понеділок"
-    1 -> "Вівторок"
-    2 -> "Середа"
-    3 -> "Четвер"
-    4 -> "П'ятниця"
-    5 -> "Субота"
-    6 -> "Неділя"
-    else -> ""
+fun Int.getDayOfWeekName(short: Boolean = false) = if(!short){
+    when(this % 7){
+        0 -> "Понеділок"
+        1 -> "Вівторок"
+        2 -> "Середа"
+        3 -> "Четвер"
+        4 -> "П'ятниця"
+        5 -> "Субота"
+        6 -> "Неділя"
+        else -> ""
+    }
+}
+else{
+    when(this % 7){
+        0 -> "ПН"
+        1 -> "ВТ"
+        2 -> "СР"
+        3 -> "ЧТ"
+        4 -> "ПТ"
+        5 -> "СБ"
+        6 -> "НД"
+        else -> ""
+    }
 }
 
 fun String.timeToLocalDateTime(): LocalDateTime? {

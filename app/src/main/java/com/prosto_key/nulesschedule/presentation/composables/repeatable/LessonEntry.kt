@@ -32,7 +32,7 @@ fun LessonEntry(
                 }
             )
             .border(
-                1.dp,
+                0.5.dp,
                 when (state) {
                     LessonState.Passed -> MaterialTheme.colors.onBackground
                     LessonState.Current -> MaterialTheme.colors.primary
@@ -57,22 +57,17 @@ fun LessonEntry(
             maxLines = 2
         )
         if(state == LessonState.Current && fraction!= null){
-            Row(modifier = Modifier
+            BoxWithConstraints(modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .height(4.dp)
-                .align(Alignment.BottomCenter)
+                .background(MaterialTheme.colors.surface)
             ) {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxHeight()
-                        .fillMaxWidth(fraction)
+                        .width(maxWidth * fraction)
                         .background(MaterialTheme.colors.secondary)
-                )
-                Box(
-                    modifier = modifier
-                        .fillMaxHeight()
-                        .weight(1f)
-                        .background(MaterialTheme.colors.surface)
                 )
             }
         }

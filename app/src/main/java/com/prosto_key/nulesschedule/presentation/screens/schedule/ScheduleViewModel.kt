@@ -177,8 +177,9 @@ constructor(
         //datetime update once a minute
         viewModelScope.launch {
             while(true){
-                delay((59 - _currentDateTime.value.second) * 1000L)
+                delay((60 - _currentDateTime.value.second) * 1000L)
                 _currentDateTime.value = getCurrentDateTime()
+                Log.d("puk", _currentDateTime.value.toString())
             }
         }
 
