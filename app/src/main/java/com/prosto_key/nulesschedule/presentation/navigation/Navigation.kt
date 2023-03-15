@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
+import com.prosto_key.nulesschedule.presentation.screens.time_schedule.TimeScheduleScreen
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 @Composable
@@ -37,7 +38,7 @@ fun Navigation(
         }
 
         composable(Screen.TimeScheduleScreen.route){
-            //TimeScheduleScreen(navController = navController, launcher = launcher, workbook = workbook)
+            TimeScheduleScreen(navController = navController)
         }
 
         composable(

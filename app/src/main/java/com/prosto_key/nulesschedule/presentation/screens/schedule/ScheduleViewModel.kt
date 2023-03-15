@@ -2,7 +2,6 @@ package com.prosto_key.nulesschedule.presentation.screens.schedule
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.*
@@ -13,7 +12,6 @@ import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.datastore.saveIntToDataStore
 import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
 import com.prosto_key.nulesschedule.data.util.getCurrentDateTime
-import com.prosto_key.nulesschedule.data.util.getFractionBetween
 import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
@@ -23,7 +21,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +38,7 @@ constructor(
 
     //SCHEDULE
     private val _selectedScheduleID =  mutableStateOf(-1)
-    val selectedScheduleID: State<Int> =  _selectedScheduleID
+    //val selectedScheduleID: State<Int> =  _selectedScheduleID
 
     val schedule =  mutableStateOf(Schedule())
 
@@ -179,14 +176,14 @@ constructor(
             while(true){
                 delay((60 - _currentDateTime.value.second) * 1000L)
                 _currentDateTime.value = getCurrentDateTime()
-                Log.d("puk", _currentDateTime.value.toString())
             }
         }
 
         //reading timeschedule from database
         viewModelScope.launch {
             _timeSchedule.value = repository.getTimeScheduleFlow().first()
-            println("[eq")
         }
+
+
     }
 }

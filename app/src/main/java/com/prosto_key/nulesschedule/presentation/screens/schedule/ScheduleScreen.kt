@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,6 +23,7 @@ import com.prosto_key.nulesschedule.presentation.composables.BottomSheetMenu
 import com.prosto_key.nulesschedule.presentation.composables.ScheduleViewer
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
 import com.prosto_key.nulesschedule.presentation.composables.repeatable.MenuItem
+import com.prosto_key.nulesschedule.presentation.navigation.Screen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -123,7 +123,12 @@ fun ScheduleScreen(
                                     )
                                 },
                                 title = "Графік занять",
-                                onItemClick = {}
+                                onItemClick = {
+                                    scope.launch{
+                                        sheetState.collapse()
+                                        navController.navigate(Screen.TimeScheduleScreen.route)
+                                    }
+                                }
                             )
                             MenuItem(
                                 modifier = Modifier.fillMaxWidth(),
@@ -189,13 +194,22 @@ fun ScheduleScreen(
             }
         }
     ) { _, _ ->
-        ScheduleViewer(
+
+        Box(
             modifier = Modifier
-                .padding(top = 8.dp, bottom = 106.dp, start = 8.dp, end = 8.dp)
-                .fillMaxSize(),
-            data = viewModel.week,
-            timeSchedule = viewModel.timeSchedule,
-            currentDayTime = viewModel.currentDateTime.value
-        )
+                .fillMaxSize()
+                .padding(top = 24.dp, bottom = 106.dp, start = 8.dp, end = 8.dp),
+            contentAlignment = Alignment.Center
+        ){
+            ScheduleViewer(
+                modifier = Modifier
+                    .widthIn(max = 500.dp)
+                    .heightIn(max = 700.dp),
+                data = viewModel.week,
+                timeSchedule = viewModel.timeSchedule,
+                currentDayTime = viewModel.currentDateTime.value
+            )
+        }
+
     }
 }

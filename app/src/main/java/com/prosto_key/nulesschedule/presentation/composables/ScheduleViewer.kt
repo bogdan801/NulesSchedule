@@ -108,7 +108,7 @@ fun ScheduleViewer(
                     .weight(1f),
                 shape = MaterialTheme.shapes.large,
                 backgroundColor = MaterialTheme.colors.primary,
-                elevation = 6.dp
+                elevation = 5.dp
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     AnimatedContent(
@@ -225,7 +225,7 @@ fun ScheduleViewer(
                     .height(65.dp),
                 shape = MaterialTheme.shapes.large,
                 backgroundColor = MaterialTheme.colors.primary,
-                elevation = 6.dp
+                elevation = 5.dp
             ) {
                 BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
                     val width = maxWidth
