@@ -3,7 +3,7 @@ package com.prosto_key.nulesschedule.presentation.navigation
 sealed class Screen(val route: String) {
     object ScheduleScreen  : Screen("schedule")
     object TimeScheduleScreen : Screen("timeSchedule")
-    object LessonsScreen  : Screen("lessons")
+    object SubjectsScreen  : Screen("subjects")
     object ArchiveScreen    : Screen("archive")
 
     fun withArgs(vararg args: String): String {

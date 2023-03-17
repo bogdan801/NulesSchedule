@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
+import com.prosto_key.nulesschedule.presentation.screens.subjects.SubjectsScreen
 import com.prosto_key.nulesschedule.presentation.screens.time_schedule.TimeScheduleScreen
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
@@ -42,7 +43,7 @@ fun Navigation(
         }
 
         composable(
-            route = Screen.LessonsScreen.route + "/{scheduleID}/{referredSubjectID}",
+            route = Screen.SubjectsScreen.route + "/{scheduleID}/{referredSubjectID}",
             arguments = listOf(
                 navArgument("scheduleID"){
                     type = NavType.IntType
@@ -52,7 +53,7 @@ fun Navigation(
                 }
             )
         ){
-            //LessonsScreen(navController = navController)
+            SubjectsScreen(navController = navController)
         }
 
         composable(Screen.ArchiveScreen.route){

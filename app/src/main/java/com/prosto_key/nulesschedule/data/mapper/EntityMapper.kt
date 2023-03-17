@@ -1,5 +1,6 @@
 package com.prosto_key.nulesschedule.data.mapper
 
+import com.prosto_key.nulesschedule.data.local.database.Dao
 import com.prosto_key.nulesschedule.data.local.database.entities.*
 import com.prosto_key.nulesschedule.data.local.database.relations.ScheduleWithLessonsJunction
 import com.prosto_key.nulesschedule.domain.model.Lesson
@@ -44,9 +45,10 @@ fun Teacher.toTeacherEntity() = TeacherEntity(
     additionalInfo = additionalInfo
 )
 
-fun TeacherEntity.toTeacher() = Teacher(
+fun TeacherEntity.toTeacher(isLector: Boolean? = null) = Teacher(
     teacherID = teacherID,
     fullName = fullName,
+    isLector = isLector,
     phoneNumber = phoneNumber,
     email = email,
     additionalInfo = additionalInfo

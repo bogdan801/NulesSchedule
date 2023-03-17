@@ -38,7 +38,7 @@ constructor(
 
     //SCHEDULE
     private val _selectedScheduleID =  mutableStateOf(-1)
-    //val selectedScheduleID: State<Int> =  _selectedScheduleID
+    val selectedScheduleID: State<Int> =  _selectedScheduleID
 
     val schedule =  mutableStateOf(Schedule())
 

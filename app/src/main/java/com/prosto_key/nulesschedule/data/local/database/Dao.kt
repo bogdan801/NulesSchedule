@@ -57,13 +57,13 @@ interface Dao {
     suspend fun getScheduleWithLessons(id: Int): ScheduleWithLessonsJunction
 
     @Query("SELECT * FROM subjectentity WHERE scheduleID == :scheduleID ORDER BY name ASC")
-    suspend fun getSubjectEntities(scheduleID: Int): List<SubjectEntity>
-
-    @Query("SELECT * FROM subjectentity WHERE subjectID == :id")
-    suspend fun getSubjectWithTeachers(id: Int): SubjectWithTeachersJunction
+    fun getSubjectEntities(scheduleID: Int): Flow<List<SubjectWithTeachersJunction>>
 
     @Query("SELECT * FROM teacherentity WHERE teacherID == :id")
     suspend fun getTeacherEntity(id: Int): TeacherEntity
+
+    @Query("SELECT * FROM subjectentity WHERE subjectID == :id")
+    suspend fun getSubjectWithTeachers(id: Int): SubjectWithTeachersJunction
 
     @Query("SELECT * FROM scheduleentity WHERE fileName == :fileName AND major == :major AND year == :year AND `group` == :group")
     suspend fun getScheduleByItsContents(fileName: String, major: String, year: String, group: String): ScheduleEntity

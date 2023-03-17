@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
 import com.prosto_key.nulesschedule.presentation.navigation.Navigation
 import com.prosto_key.nulesschedule.presentation.theme.NulesScheduleTheme
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.GreenTheme)
 
         val openFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -41,6 +43,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
 
         setContent {
             LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)

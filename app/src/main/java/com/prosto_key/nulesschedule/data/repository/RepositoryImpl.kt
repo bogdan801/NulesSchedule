@@ -13,6 +13,7 @@ import com.prosto_key.nulesschedule.data.util.cutSubjectNameFromLesson
 import com.prosto_key.nulesschedule.data.util.isSimilarTo
 import com.prosto_key.nulesschedule.domain.model.Lesson
 import com.prosto_key.nulesschedule.domain.model.Schedule
+import com.prosto_key.nulesschedule.domain.model.Subject
 import com.prosto_key.nulesschedule.domain.model.Teacher
 import com.prosto_key.nulesschedule.domain.model.time_schedule.LessonTime
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
@@ -104,6 +105,17 @@ class RepositoryImpl(private val dao: Dao):Repository {
         val found = dao.getScheduleByItsContents(schedule.fileName, schedule.major, schedule.year, schedule.group).toSchedule(null)
         return found.scheduleID
     }
+
+    override suspend fun getSubjectsWithTeachersFlow(scheduleID: Int): Flow<List<Subject>> =
+        dao.getSubjectEntities(scheduleID).map { subjectsWithTeachers ->
+            subjectsWithTeachers.map { subjectWithTeacher ->
+                val teachers = subjectWithTeacher.teachers.map { teachersOfSubjectEntity ->
+                    dao.getTeacherEntity(teachersOfSubjectEntity.teacherID).toTeacher(teachersOfSubjectEntity.isLector)
+                }
+                subjectWithTeacher.subject.toSubject(teachers)
+            }
+        }
+
 
     //read excel
     private val fileBuffer: MutableState<ScheduleFileBuffer> = mutableStateOf(ScheduleFileBuffer())

@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 fun BottomSheetMenu(
     modifier: Modifier = Modifier,
     title: String = "",
+    titleFontSize: TextUnit = MaterialTheme.typography.h2.fontSize,
     onLeftActionClick: (() -> Unit)? = {},
     onRightActionClick: (() -> Unit)? = {},
     leftIcon: @Composable BoxScope.() -> Unit = {},
@@ -59,6 +61,7 @@ fun BottomSheetMenu(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.h2,
+                    fontSize = titleFontSize,
                     color = MaterialTheme.colors.secondary,
                     textAlign = TextAlign.Center
                 )

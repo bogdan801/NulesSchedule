@@ -141,7 +141,12 @@ fun ScheduleScreen(
                                     )
                                 },
                                 title = "Поточні предмети",
-                                onItemClick = {}
+                                onItemClick = {
+                                    scope.launch {
+                                        sheetState.collapse()
+                                        navController.navigate(Screen.SubjectsScreen.withArgs("${viewModel.selectedScheduleID.value}", "-1"))
+                                    }
+                                }
                             )
                             MenuItem(
                                 modifier = Modifier.fillMaxWidth(),
@@ -194,7 +199,6 @@ fun ScheduleScreen(
             }
         }
     ) { _, _ ->
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -207,9 +211,13 @@ fun ScheduleScreen(
                     .heightIn(max = 700.dp),
                 data = viewModel.week,
                 timeSchedule = viewModel.timeSchedule,
-                currentDayTime = viewModel.currentDateTime.value
+                currentDayTime = viewModel.currentDateTime.value,
+                onLessonLongClick = { lesson ->
+                    if(lesson != null){
+                        navController.navigate(Screen.SubjectsScreen.withArgs(viewModel.selectedScheduleID.toString(), lesson.subjectID.toString()))
+                    }
+                }
             )
         }
-
     }
 }
