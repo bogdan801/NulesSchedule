@@ -49,7 +49,12 @@ fun String.timeToLocalDateTime(): LocalDateTime? {
     return LocalDateTime(year = currentDayTime.year, monthNumber = currentDayTime.monthNumber, dayOfMonth = currentDayTime.dayOfMonth, hour = parts[0].toInt(), minute = parts[1].toInt())
 }
 
-fun LocalDateTime.isTimeBetween(start: LocalDateTime, end: LocalDateTime) = this>=start && this<end
+fun LocalDateTime.isTimeBetween(start: LocalDateTime, end: LocalDateTime, isInclusive: Boolean = false): Boolean{
+    return if(isInclusive){
+        this in start..end
+    }
+    else this>=start && this<end
+}
 
 fun LocalDateTime.getFractionBetween(start: LocalDateTime, end: LocalDateTime): Float {
     if(this<start) return 0f
@@ -63,3 +68,5 @@ fun LocalDateTime.getFractionBetween(start: LocalDateTime, end: LocalDateTime): 
     val passedDistanceInMinutes = (passedDistance.hours * 60) + passedDistance.minutes
     return passedDistanceInMinutes.toFloat() / wholeDistanceInMinutes.toFloat()
 }
+
+fun LocalDateTime.toTimeString() = "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"

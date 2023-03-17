@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -51,13 +52,15 @@ fun BottomSheetMenu(
 
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .widthIn(max = 180.dp),
                 contentAlignment = Alignment.Center
             ){
                 Text(
                     text = title,
                     style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.secondary
+                    color = MaterialTheme.colors.secondary,
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -76,6 +79,7 @@ fun BottomSheetMenu(
         }
         Box(
             modifier = Modifier
+                .padding(top = 4.dp)
                 .fillMaxWidth()
                 .height(1.dp)
                 .background(MaterialTheme.colors.onSurface.copy(alpha = 0.5f))

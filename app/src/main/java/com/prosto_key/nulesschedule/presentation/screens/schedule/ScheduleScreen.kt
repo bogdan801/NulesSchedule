@@ -66,7 +66,7 @@ fun ScheduleScreen(
                                 modifier = Modifier
                                     .size(22.dp)
                                     .graphicsLayer {
-                                        rotationX = expansionFraction * 180f
+                                        rotationX = (expansionFraction * 180f) + 180f
                                     },
                                 painter = painterResource(id = R.drawable.ic_expand),
                                 contentDescription = "",
