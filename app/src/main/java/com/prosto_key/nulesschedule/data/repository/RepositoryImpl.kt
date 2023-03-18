@@ -79,8 +79,11 @@ class RepositoryImpl(private val dao: Dao):Repository {
         dao.deleteScheduleEntity(scheduleID)
     }
 
-    override suspend fun deleteTeacher(teacherID: Int) {
-        dao.deleteTeacherEntity(teacherID)
+    override suspend fun deleteTeacher(subjectID: Int, teacherID: Int) {
+        dao.deleteTeachersOfSubjectEntity(subjectID, teacherID)
+        if(dao.isTeacherInAnySubject().isEmpty()){
+            dao.deleteTeacherEntity(teacherID)
+        }
     }
 
     //select

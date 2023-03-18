@@ -3,19 +3,14 @@ package com.prosto_key.nulesschedule.presentation.navigation
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
 import com.prosto_key.nulesschedule.presentation.screens.subjects.SubjectsScreen
 import com.prosto_key.nulesschedule.presentation.screens.time_schedule.TimeScheduleScreen
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 @Composable
 fun Navigation(

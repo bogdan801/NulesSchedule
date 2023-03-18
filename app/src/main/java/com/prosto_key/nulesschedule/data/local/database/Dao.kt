@@ -40,13 +40,16 @@ interface Dao {
     @Query("DELETE FROM teacherentity WHERE teacherID == :id")
     suspend fun deleteTeacherEntity(id: Int)
 
-    @Query("DELETE FROM teachersofsubjectentity WHERE teachersOfSubjectID == :id")
-    suspend fun deleteTeachersOfSubjectEntity(id: Int)
+    @Query("DELETE FROM teachersofsubjectentity WHERE subjectID == :subjectID AND teacherID == :teacherID")
+    suspend fun deleteTeachersOfSubjectEntity(subjectID: Int, teacherID: Int)
 
     @Query("DELETE FROM lessonentity WHERE lessonID == :id")
     suspend fun deleteLessonEntity(id: Int)
 
     //SELECT
+    @Query("SELECT * FROM teachersofsubjectentity")
+    suspend fun isTeacherInAnySubject(): List<TeachersOfSubjectEntity>
+
     @Query("SELECT * FROM timescheduleentity")
     fun getTimeScheduleEntities(): Flow<List<TimeScheduleEntity>>
 

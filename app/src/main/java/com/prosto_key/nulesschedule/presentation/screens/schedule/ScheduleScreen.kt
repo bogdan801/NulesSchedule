@@ -130,37 +130,39 @@ fun ScheduleScreen(
                                     }
                                 }
                             )
-                            MenuItem(
-                                modifier = Modifier.fillMaxWidth(),
-                                icon = {
-                                    Icon(
-                                        modifier = Modifier.size(24.dp),
-                                        painter = painterResource(id = R.drawable.ic_check),
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colors.secondary
-                                    )
-                                },
-                                title = "Поточні предмети",
-                                onItemClick = {
-                                    scope.launch {
-                                        sheetState.collapse()
-                                        navController.navigate(Screen.SubjectsScreen.withArgs("${viewModel.selectedScheduleID.value}", "-1"))
+                            if(viewModel.week != null){
+                                MenuItem(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    icon = {
+                                        Icon(
+                                            modifier = Modifier.size(24.dp),
+                                            painter = painterResource(id = R.drawable.ic_check),
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colors.secondary
+                                        )
+                                    },
+                                    title = "Поточні предмети",
+                                    onItemClick = {
+                                        scope.launch {
+                                            sheetState.collapse()
+                                            navController.navigate(Screen.SubjectsScreen.withArgs("${viewModel.selectedScheduleID.value}", "-1"))
+                                        }
                                     }
-                                }
-                            )
-                            MenuItem(
-                                modifier = Modifier.fillMaxWidth(),
-                                icon = {
-                                    Icon(
-                                        modifier = Modifier.size(22.dp),
-                                        painter = painterResource(id = R.drawable.ic_archive),
-                                        contentDescription = "",
-                                        tint = MaterialTheme.colors.secondary
-                                    )
-                                },
-                                title = "Архів розкладів",
-                                onItemClick = {}
-                            )
+                                )
+                                MenuItem(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    icon = {
+                                        Icon(
+                                            modifier = Modifier.size(22.dp),
+                                            painter = painterResource(id = R.drawable.ic_archive),
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colors.secondary
+                                        )
+                                    },
+                                    title = "Архів розкладів",
+                                    onItemClick = {}
+                                )
+                            }
                         }
                     )
                 }
@@ -214,7 +216,7 @@ fun ScheduleScreen(
                 currentDayTime = viewModel.currentDateTime.value,
                 onLessonLongClick = { lesson ->
                     if(lesson != null){
-                        navController.navigate(Screen.SubjectsScreen.withArgs(viewModel.selectedScheduleID.toString(), lesson.subjectID.toString()))
+                        navController.navigate(Screen.SubjectsScreen.withArgs(viewModel.selectedScheduleID.value.toString(), lesson.subjectID.toString()))
                     }
                 }
             )

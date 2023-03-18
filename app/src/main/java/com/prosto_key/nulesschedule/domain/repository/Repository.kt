@@ -20,7 +20,7 @@ interface Repository {
 
     //delete
     suspend fun deleteSchedule(scheduleID: Int)
-    suspend fun deleteTeacher(teacherID: Int)
+    suspend fun deleteTeacher(subjectID: Int, teacherID: Int)
 
     //select
     suspend fun getFullSchedule(scheduleID: Int): Schedule
