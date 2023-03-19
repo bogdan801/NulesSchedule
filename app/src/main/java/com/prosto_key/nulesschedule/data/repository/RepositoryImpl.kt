@@ -119,6 +119,7 @@ class RepositoryImpl(private val dao: Dao):Repository {
             }
         }
 
+    override fun getTeachersFlow() = dao.getTeacherEntities().map { it.map { entity -> entity.toTeacher() } }
 
     //read excel
     private val fileBuffer: MutableState<ScheduleFileBuffer> = mutableStateOf(ScheduleFileBuffer())

@@ -56,6 +56,9 @@ interface Dao {
     @Query("SELECT * FROM scheduleentity")
     fun getSchedulesEntities(): Flow<List<ScheduleEntity>>
 
+    @Query("SELECT * FROM teacherentity")
+    fun getTeacherEntities(): Flow<List<TeacherEntity>>
+
     @Query("SELECT * FROM scheduleentity WHERE scheduleID == :id")
     suspend fun getScheduleWithLessons(id: Int): ScheduleWithLessonsJunction
 

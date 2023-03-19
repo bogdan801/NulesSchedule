@@ -10,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.domain.model.Subject
+import com.prosto_key.nulesschedule.domain.model.Teacher
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,6 +28,8 @@ constructor(
     //CONTEXT
     private val context get() = getApplication<Application>()
 
+
+    //SUBJECT LIST
     private val _scheduleID = mutableStateOf(-1)
     val scheduleID: State<Int> = _scheduleID
 
@@ -37,7 +40,7 @@ constructor(
     val subjects: State<List<Subject>> = _subjects
 
     val preOpenedIndex by derivedStateOf {
-        if(_preOpenedSubjectID.value != -1){
+        if(_preOpenedSubjectID.value != -1) {
             val element = subjects.value.find { subject ->
                 subject.subjectID == _preOpenedSubjectID.value
             }
@@ -46,11 +49,29 @@ constructor(
         else 0
     }
 
+    //ADD TEACHER SHEET
+    private val _allTeachers = mutableStateOf(listOf<Teacher>())
+    val allTeachers: State<List<Teacher>> = _allTeachers
+
+    fun addTeacher(teacher: Teacher, isNew: Boolean, subjectID: Int){
+        viewModelScope.launch {
+            if(isNew) {
+                repository.insertTeacherAndAddToASubject(teacher, subjectID, teacher.isLector!!)
+            }
+            else {
+                repository.addToTeacherToASubject(teacher.teacherID, subjectID, teacher.isLector!!)
+            }
+        }
+    }
+
+    //DELETE TEACHER
     fun deleteTeacherFromSubject(subjectID: Int, teacherID: Int){
         viewModelScope.launch {
             repository.deleteTeacher(subjectID, teacherID)
         }
     }
+
+
 
     init {
         _scheduleID.value = handle.get<Int>("scheduleID") ?: -1
@@ -67,6 +88,12 @@ constructor(
                 repository.getSubjectsWithTeachersFlow(_scheduleID.value).collect{ listOfSubjects ->
                     _subjects.value = listOfSubjects
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            repository.getTeachersFlow().collect{ teachers ->
+                _allTeachers.value = teachers
             }
         }
     }

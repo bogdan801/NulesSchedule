@@ -29,6 +29,7 @@ interface Repository {
     suspend fun isScheduleUnique(schedule: Schedule): Boolean
     suspend fun getScheduleID(schedule: Schedule): Int
     suspend fun getSubjectsWithTeachersFlow(scheduleID: Int): Flow<List<Subject>>
+    fun getTeachersFlow(): Flow<List<Teacher>>
 
     //read excel
     fun readMajorsFromFile(workbook: XSSFWorkbook, sheet: Int): List<String>
