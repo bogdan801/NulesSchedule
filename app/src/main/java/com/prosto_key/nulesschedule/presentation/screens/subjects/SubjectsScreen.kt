@@ -10,10 +10,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -24,8 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.domain.model.Subject
-import com.prosto_key.nulesschedule.domain.model.Teacher
-import com.prosto_key.nulesschedule.presentation.composables.AddScheduleSheet
 import com.prosto_key.nulesschedule.presentation.composables.AddTeacherSheet
 import com.prosto_key.nulesschedule.presentation.composables.BottomSheetMenu
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
@@ -48,7 +44,7 @@ fun SubjectsScreen(
         mutableStateOf(false)
     }
 
-    var currentSubjectID by rememberSaveable { mutableStateOf(-1) }
+    var currentSubject by remember { mutableStateOf(Subject(0, "", null)) }
 
     BottomSheetLayout(
         modifier = Modifier
@@ -71,7 +67,7 @@ fun SubjectsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(520.dp),
-                        title = "Поточні предмети",
+                        title = "Дисципліни групи",
                         titleFontSize = 21.sp,
                         leftIcon = {
                             Icon(
@@ -122,11 +118,11 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Графік занять",
+                                title = "Розклад дзвінків",
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
-                                        navController.navigate(Screen.SubjectsScreen.route)
+                                        navController.navigate(Screen.TimeScheduleScreen.route)
                                     }
                                 }
                             )
@@ -140,7 +136,7 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Поточні предмети",
+                                title = "Дисципліни групи",
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -170,7 +166,7 @@ fun SubjectsScreen(
                             .height(520.dp),
                         teachers = viewModel.allTeachers.value,
                         onAddTeacherClick = { teacher, isNew ->
-                            viewModel.addTeacher(teacher, isNew, currentSubjectID)
+                            viewModel.addTeacher(teacher, isNew, currentSubject)
                             scope.launch {
                                 sheetState.collapse()
                             }
@@ -204,12 +200,12 @@ fun SubjectsScreen(
                     onExpandClick = {
                         isExpanded = !isExpanded
                     },
-                    onTeacherDeleteClick = { subjectID, teacherID ->
-                        viewModel.deleteTeacherFromSubject(subjectID, teacherID)
+                    onTeacherDeleteClick = { teacher ->
+                        viewModel.deleteTeacherFromSubject(teacher)
                     },
                     onAddTeacherClick = {
                         showAddSheet = true
-                        currentSubjectID = subject.subjectID
+                        currentSubject = subject
                         scope.launch {
                             delay(400)
                             if(sheetState.isCollapsed) sheetState.expand()

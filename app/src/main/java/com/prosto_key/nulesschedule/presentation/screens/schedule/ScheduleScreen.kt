@@ -59,7 +59,7 @@ fun ScheduleScreen(
                     BottomSheetMenu(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(450.dp),
+                            .height(520.dp),
                         title = "Розклад НУБіП",
                         leftIcon = {
                             Icon(
@@ -122,7 +122,7 @@ fun ScheduleScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Графік занять",
+                                title = "Розклад дзвінків",
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -141,7 +141,7 @@ fun ScheduleScreen(
                                             tint = MaterialTheme.colors.secondary
                                         )
                                     },
-                                    title = "Поточні предмети",
+                                    title = "Дисципліни групи",
                                     onItemClick = {
                                         scope.launch {
                                             sheetState.collapse()
@@ -170,8 +170,8 @@ fun ScheduleScreen(
                     AddScheduleSheet(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(450.dp),
-                        openedFileName = viewModel.fileName,
+                            .height(520.dp),
+                        openedFileName = viewModel.fileName.value,
                         onOpenFileClick = {
                             viewModel.openFile(launcher)
                         },

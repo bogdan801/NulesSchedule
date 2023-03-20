@@ -1,10 +1,11 @@
 package com.prosto_key.nulesschedule.presentation.composables.repeatable
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.domain.model.Subject
+import com.prosto_key.nulesschedule.domain.model.Teacher
 
 @Composable
 fun SubjectCard(
@@ -27,7 +30,7 @@ fun SubjectCard(
     isExpanded: Boolean = false,
     onExpandClick: () -> Unit = {},
     onAddTeacherClick: () -> Unit = {},
-    onTeacherDeleteClick: (subjectID: Int, teacherID: Int) -> Unit = {_, _ ->}
+    onTeacherDeleteClick: (teacher: Teacher) -> Unit = {}
 ) {
     val density = LocalDensity.current
     var teachersHeight by remember { mutableStateOf(100.dp)}
@@ -39,7 +42,7 @@ fun SubjectCard(
             } else {
                 when {
                     data.teachers.isEmpty() -> 160.dp
-                    else -> 60.dp + teachersHeight
+                    else -> 60.dp + 100.dp
                 }
             }
         }
@@ -56,11 +59,17 @@ fun SubjectCard(
         elevation = 2.dp
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            val iconRotation by animateFloatAsState(targetValue = if(!isExpanded) 0f else 180f)
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
                 .shadow(elevation = 10.dp)
-                .background(MaterialTheme.colors.primary),
+                .background(MaterialTheme.colors.primary)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onExpandClick
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -80,7 +89,6 @@ fun SubjectCard(
                     contentAlignment = Alignment.Center
                 ){
                     IconButton(onClick = onExpandClick) {
-                        val iconRotation by animateFloatAsState(targetValue = if(!isExpanded) 0f else 180f)
                         Icon(
                             modifier = Modifier
                                 .size(20.dp)
@@ -128,9 +136,13 @@ fun SubjectCard(
 
                     Column(modifier = Modifier
                         .fillMaxWidth()
-                        .onGloballyPositioned { coords ->
+                        .onPlaced { coords ->
                             teachersHeight = with(density) { coords.size.height.toDp() }
+                            if(data.teachers != null && data.teachers.size > 1){
+                                Log.d("puk", teachersHeight.toString())
+                            }
                         }
+
                     ) {
                         if(data.teachers != null && data.teachers.isNotEmpty()){
                             data.teachers.forEachIndexed{ id, teacher ->
@@ -138,7 +150,7 @@ fun SubjectCard(
                                     modifier = Modifier.fillMaxWidth(),
                                     data = teacher,
                                     onTeacherDeleteClick = {
-                                        onTeacherDeleteClick(data.subjectID, teacher.teacherID)
+                                        onTeacherDeleteClick(teacher)
                                     }
                                 )
                                 if(id != data.teachers.lastIndex) Spacer(modifier = Modifier.height(8.dp))

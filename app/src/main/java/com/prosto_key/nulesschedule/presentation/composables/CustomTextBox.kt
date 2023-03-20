@@ -39,7 +39,7 @@ fun CustomTextBox(
     var expanded by remember { mutableStateOf(false) }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
-    Column {
+    Column(modifier = modifier) {
         if(title.isNotBlank()){
             Text(
                 modifier = Modifier.padding(vertical = 2.dp),
@@ -50,7 +50,8 @@ fun CustomTextBox(
         }
         Box{
             Card(
-                modifier = modifier
+                modifier = Modifier
+                    .fillMaxSize()
                     .onGloballyPositioned { coordinates ->
                         textFieldSize = coordinates.size.toSize()
                     }
@@ -92,7 +93,7 @@ fun CustomTextBox(
                         )
                     }
                     else{
-                        if(selectedIndex == 0){
+                        if(selectedIndex == 0 && dropDownItems.isNotEmpty()){
                             Text(
                                 modifier = Modifier
                                     .padding(start = 8.dp)

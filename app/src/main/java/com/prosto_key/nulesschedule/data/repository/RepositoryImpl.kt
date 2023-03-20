@@ -79,10 +79,10 @@ class RepositoryImpl(private val dao: Dao):Repository {
         dao.deleteScheduleEntity(scheduleID)
     }
 
-    override suspend fun deleteTeacher(subjectID: Int, teacherID: Int) {
-        dao.deleteTeachersOfSubjectEntity(subjectID, teacherID)
-        if(dao.isTeacherInAnySubject().isEmpty()){
-            dao.deleteTeacherEntity(teacherID)
+    override suspend fun deleteTeacher(teacher: Teacher) {
+        dao.deleteTeachersOfSubjectEntity(teacher.teacherOfSubjectID!!)
+        if(dao.isTeacherInAnySubject(teacher.teacherID).isEmpty()){
+            dao.deleteTeacherEntity(teacher.teacherID)
         }
     }
 
@@ -113,7 +113,7 @@ class RepositoryImpl(private val dao: Dao):Repository {
         dao.getSubjectEntities(scheduleID).map { subjectsWithTeachers ->
             subjectsWithTeachers.map { subjectWithTeacher ->
                 val teachers = subjectWithTeacher.teachers.map { teachersOfSubjectEntity ->
-                    dao.getTeacherEntity(teachersOfSubjectEntity.teacherID).toTeacher(teachersOfSubjectEntity.isLector)
+                    dao.getTeacherEntity(teachersOfSubjectEntity.teacherID).toTeacher(teachersOfSubjectEntity.isLector, teachersOfSubjectEntity.teachersOfSubjectID)
                 }
                 subjectWithTeacher.subject.toSubject(teachers)
             }

@@ -1,15 +1,13 @@
 package com.prosto_key.nulesschedule.presentation.composables.repeatable
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.prosto_key.nulesschedule.domain.model.Teacher
 
@@ -21,14 +19,16 @@ fun TeacherCard(
 ) {
     Card(
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.onPrimary
+        backgroundColor = MaterialTheme.colors.onPrimary,
+        shape = RectangleShape,
+        elevation = 2.dp
     ) {
         Box(modifier = Modifier
             .padding(8.dp)
-            .fillMaxSize()
+            .fillMaxWidth()
         ){
             Column(
-                modifier = Modifier.padding(end = 32.dp).fillMaxSize(),
+                modifier = Modifier.padding(end = 32.dp).fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
                 if(data.isLector != null) {

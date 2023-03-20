@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.prosto_key.nulesschedule.R
@@ -51,8 +52,9 @@ fun TimeScheduleScreen(
             BottomSheetMenu(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(450.dp),
-                title = if(!viewModel.isEditMode.value) "Графік занять" else "Редагування графіку",
+                    .height(520.dp),
+                title = if(!viewModel.isEditMode.value) "Розклад дзвінків" else "Редагування розкладу",
+                titleFontSize = 21.sp,
                 leftIcon = {
                     Icon(
                         modifier = Modifier
@@ -113,7 +115,7 @@ fun TimeScheduleScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Графік занять",
+                        title = "Розклад дзвінків",
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
@@ -130,7 +132,7 @@ fun TimeScheduleScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Поточні предмети",
+                        title = "Дисципліни групи",
                         onItemClick = {
                             scope.launch {
                                 sheetState.collapse()

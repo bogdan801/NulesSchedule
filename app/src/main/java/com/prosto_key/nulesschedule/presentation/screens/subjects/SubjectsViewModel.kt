@@ -28,7 +28,6 @@ constructor(
     //CONTEXT
     private val context get() = getApplication<Application>()
 
-
     //SUBJECT LIST
     private val _scheduleID = mutableStateOf(-1)
     val scheduleID: State<Int> = _scheduleID
@@ -53,25 +52,25 @@ constructor(
     private val _allTeachers = mutableStateOf(listOf<Teacher>())
     val allTeachers: State<List<Teacher>> = _allTeachers
 
-    fun addTeacher(teacher: Teacher, isNew: Boolean, subjectID: Int){
+    fun addTeacher(teacher: Teacher, isNew: Boolean, subject: Subject){
         viewModelScope.launch {
             if(isNew) {
-                repository.insertTeacherAndAddToASubject(teacher, subjectID, teacher.isLector!!)
+                repository.insertTeacherAndAddToASubject(teacher, subject.subjectID, teacher.isLector!!)
             }
             else {
-                repository.addToTeacherToASubject(teacher.teacherID, subjectID, teacher.isLector!!)
+                if(subject.teachers != null && !subject.teachers.contains(teacher)){
+                    repository.addToTeacherToASubject(teacher.teacherID, subject.subjectID, teacher.isLector!!)
+                }
             }
         }
     }
 
     //DELETE TEACHER
-    fun deleteTeacherFromSubject(subjectID: Int, teacherID: Int){
+    fun deleteTeacherFromSubject(teacher: Teacher){
         viewModelScope.launch {
-            repository.deleteTeacher(subjectID, teacherID)
+            repository.deleteTeacher(teacher)
         }
     }
-
-
 
     init {
         _scheduleID.value = handle.get<Int>("scheduleID") ?: -1
@@ -87,6 +86,7 @@ constructor(
             viewModelScope.launch {
                 repository.getSubjectsWithTeachersFlow(_scheduleID.value).collect{ listOfSubjects ->
                     _subjects.value = listOfSubjects
+                    println(_subjects.value.toString())
                 }
             }
         }

@@ -81,7 +81,7 @@ fun AddTeacherSheet(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             text = fullName,
             title = "ПІБ викладача",
             placeholder = "Введіть ПІБ або оберіть зі списку",
@@ -114,7 +114,7 @@ fun AddTeacherSheet(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             text = phoneNumber,
             title = "Номер телефону",
             placeholder = "Введіть номер телефону",
@@ -130,7 +130,7 @@ fun AddTeacherSheet(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             text = email,
             title = "Пошта",
             placeholder = "Введіть електронну адресу",
@@ -146,7 +146,7 @@ fun AddTeacherSheet(
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             text = additionalInfo,
             title = "Додатково",
             placeholder = "Введіть додаткову інформацію",

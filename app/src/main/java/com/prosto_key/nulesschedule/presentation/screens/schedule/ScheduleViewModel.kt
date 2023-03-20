@@ -47,8 +47,7 @@ constructor(
     }
 
     //OPEN FILE SHEET
-    val fileName
-        get() = workBookState.value.fileName
+    val fileName = derivedStateOf { workBookState.value.fileName }
 
     fun openFile(launcher: ActivityResultLauncher<Intent>){
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
