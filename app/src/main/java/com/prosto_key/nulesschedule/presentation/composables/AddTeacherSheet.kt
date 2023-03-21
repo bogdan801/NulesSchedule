@@ -153,7 +153,11 @@ fun AddTeacherSheet(
             isReadOnly = index != 0,
             selectedIndex = index,
             onTextChange = { newText ->
-                additionalInfo = newText
+                if(newText.length <= 40){
+                    additionalInfo = newText
+                }
+                else Toast.makeText(context, "Максимальна кількість символів - 40", Toast.LENGTH_SHORT).show()
+
             },
             keyboardType = KeyboardType.Email
         )

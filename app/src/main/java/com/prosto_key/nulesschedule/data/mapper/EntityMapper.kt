@@ -45,7 +45,7 @@ fun Teacher.toTeacherEntity() = TeacherEntity(
     additionalInfo = additionalInfo
 )
 
-fun TeacherEntity.toTeacher(isLector: Boolean? = null, teacherOfSubjectID: Int? = null) = Teacher(
+fun TeacherEntity.toTeacher(isLector: Boolean, teacherOfSubjectID: Int? = null) = Teacher(
     teacherID = teacherID,
     fullName = fullName,
     isLector = isLector,

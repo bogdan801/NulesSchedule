@@ -17,6 +17,7 @@ fun TeacherCard(
     onTeacherDeleteClick: () -> Unit = {},
     data: Teacher
 ) {
+
     Card(
         modifier = modifier,
         backgroundColor = MaterialTheme.colors.onPrimary,
@@ -25,7 +26,8 @@ fun TeacherCard(
     ) {
         Box(modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+            contentAlignment = Alignment.CenterStart
         ){
             Column(
                 modifier = Modifier.padding(end = 32.dp).fillMaxWidth(),
@@ -66,9 +68,8 @@ fun TeacherCard(
                 }
             }
 
-            val alignment = if(data.phoneNumber==null || data.email==null) Alignment.CenterEnd else Alignment.BottomEnd
             IconButton(
-                modifier = Modifier.align(alignment),
+                modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = onTeacherDeleteClick
             ) {
                Icon(imageVector = Icons.Default.Close, contentDescription = "Delete teacher")

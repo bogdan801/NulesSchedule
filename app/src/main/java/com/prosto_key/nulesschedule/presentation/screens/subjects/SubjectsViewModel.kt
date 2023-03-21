@@ -1,10 +1,7 @@
 package com.prosto_key.nulesschedule.presentation.screens.subjects
 
 import android.app.Application
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -52,14 +49,20 @@ constructor(
     private val _allTeachers = mutableStateOf(listOf<Teacher>())
     val allTeachers: State<List<Teacher>> = _allTeachers
 
-    fun addTeacher(teacher: Teacher, isNew: Boolean, subject: Subject){
+    private val _currentSubject = mutableStateOf(Subject(0, "", null))
+
+    fun setCurrentSubject(subject: Subject){
+        _currentSubject.value = subject
+    }
+
+    fun addTeacher(teacher: Teacher, isNew: Boolean){
         viewModelScope.launch {
             if(isNew) {
-                repository.insertTeacherAndAddToASubject(teacher, subject.subjectID, teacher.isLector!!)
+                repository.insertTeacherAndAddToASubject(teacher, _currentSubject.value.subjectID, teacher.isLector)
             }
             else {
-                if(subject.teachers != null && !subject.teachers.contains(teacher)){
-                    repository.addToTeacherToASubject(teacher.teacherID, subject.subjectID, teacher.isLector!!)
+                if(_currentSubject.value.teachers != null && !_currentSubject.value.teachers!!.contains(teacher)){
+                    repository.addToTeacherToASubject(teacher.teacherID, _currentSubject.value.subjectID, teacher.isLector)
                 }
             }
         }
@@ -86,7 +89,6 @@ constructor(
             viewModelScope.launch {
                 repository.getSubjectsWithTeachersFlow(_scheduleID.value).collect{ listOfSubjects ->
                     _subjects.value = listOfSubjects
-                    println(_subjects.value.toString())
                 }
             }
         }

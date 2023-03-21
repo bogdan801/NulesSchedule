@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.prosto_key.nulesschedule.R
-import com.prosto_key.nulesschedule.domain.model.Subject
 import com.prosto_key.nulesschedule.presentation.composables.AddTeacherSheet
 import com.prosto_key.nulesschedule.presentation.composables.BottomSheetMenu
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
@@ -43,8 +42,6 @@ fun SubjectsScreen(
     var showAddSheet by rememberSaveable {
         mutableStateOf(false)
     }
-
-    var currentSubject by remember { mutableStateOf(Subject(0, "", null)) }
 
     BottomSheetLayout(
         modifier = Modifier
@@ -166,7 +163,7 @@ fun SubjectsScreen(
                             .height(520.dp),
                         teachers = viewModel.allTeachers.value,
                         onAddTeacherClick = { teacher, isNew ->
-                            viewModel.addTeacher(teacher, isNew, currentSubject)
+                            viewModel.addTeacher(teacher, isNew)
                             scope.launch {
                                 sheetState.collapse()
                             }
@@ -205,7 +202,7 @@ fun SubjectsScreen(
                     },
                     onAddTeacherClick = {
                         showAddSheet = true
-                        currentSubject = subject
+                        viewModel.setCurrentSubject(subject)
                         scope.launch {
                             delay(400)
                             if(sheetState.isCollapsed) sheetState.expand()

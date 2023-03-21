@@ -13,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,18 +35,12 @@ fun SubjectCard(
     onTeacherDeleteClick: (teacher: Teacher) -> Unit = {}
 ) {
     val density = LocalDensity.current
-    var teachersHeight by remember { mutableStateOf(100.dp)}
+    var teachersHeight by remember { mutableStateOf(0.dp)}
 
     val contentHeight by remember {
         derivedStateOf {
-            if (data.teachers == null) {
-                160.dp
-            } else {
-                when {
-                    data.teachers.isEmpty() -> 160.dp
-                    else -> 60.dp + 100.dp
-                }
-            }
+            if (data.teachers == null || data.teachers.isEmpty()) 160.dp
+            else 60.dp + teachersHeight
         }
     }
 
@@ -52,7 +48,7 @@ fun SubjectCard(
         targetValue = if(!isExpanded) 80.dp else 80.dp + contentHeight
     )
     Card(
-        modifier = modifier.height(cardHeight),
+        modifier = modifier,
         border = BorderStroke(1.dp, MaterialTheme.colors.primary),
         backgroundColor = MaterialTheme.colors.surface,
         shape = MaterialTheme.shapes.medium,
@@ -134,16 +130,7 @@ fun SubjectCard(
                     }
 
 
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .onPlaced { coords ->
-                            teachersHeight = with(density) { coords.size.height.toDp() }
-                            if(data.teachers != null && data.teachers.size > 1){
-                                Log.d("puk", teachersHeight.toString())
-                            }
-                        }
-
-                    ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         if(data.teachers != null && data.teachers.isNotEmpty()){
                             data.teachers.forEachIndexed{ id, teacher ->
                                 TeacherCard(
@@ -160,7 +147,7 @@ fun SubjectCard(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(100.dp),
+                                    .height(124.dp),
                                 contentAlignment = Alignment.Center
                             ){
                                 Text(
