@@ -1,48 +1,37 @@
-package com.prosto_key.nulesschedule.presentation.screens.time_schedule
+package com.prosto_key.nulesschedule.presentation.screens.archive
 
-import androidx.activity.compose.BackHandler
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.prosto_key.nulesschedule.R
-import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.presentation.composables.BottomSheetMenu
-import com.prosto_key.nulesschedule.presentation.composables.TimeScheduleViewer
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
 import com.prosto_key.nulesschedule.presentation.composables.repeatable.MenuItem
+import com.prosto_key.nulesschedule.presentation.composables.repeatable.ScheduleCard
 import com.prosto_key.nulesschedule.presentation.navigation.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TimeScheduleScreen(
+fun ArchiveScreen(
     navController: NavHostController,
-    viewModel: TimeScheduleViewModel = hiltViewModel()
+    viewModel: ArchiveViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    if(viewModel.isEditMode.value) {
-        BackHandler(enabled = true) {
-            viewModel.setEditMode(false)
-        }
-    }
 
     BottomSheetLayout(
         modifier = Modifier
@@ -53,7 +42,7 @@ fun TimeScheduleScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(520.dp),
-                title = if(!viewModel.isEditMode.value) "Розклад дзвінків" else "Редагування розкладу",
+                title = "Архів розкладів",
                 titleFontSize = 21.sp,
                 leftIcon = {
                     Icon(
@@ -75,14 +64,14 @@ fun TimeScheduleScreen(
                 },
                 rightIcon = {
                     Icon(
-                        modifier = Modifier.size(26.dp),
-                        imageVector = if(!viewModel.isEditMode.value) Icons.Default.Edit else Icons.Default.Close,
+                        modifier = Modifier.size(34.dp),
+                        imageVector = Icons.Default.Add,
                         contentDescription = "",
                         tint = MaterialTheme.colors.secondary
                     )
                 },
                 onRightActionClick = {
-                    viewModel.setEditMode(!viewModel.isEditMode.value)
+                    TODO()
                 },
                 menuItems = {
                     MenuItem(
@@ -98,9 +87,11 @@ fun TimeScheduleScreen(
                         title = "Головна",
                         onItemClick = {
                             scope.launch{
-                                sheetState.collapse()
-                                navController.navigate(Screen.ScheduleScreen.withArgs("-1")){
-                                    popUpTo(0)
+                                scope.launch{
+                                    sheetState.collapse()
+                                    navController.navigate(Screen.ScheduleScreen.withArgs("-1")){
+                                        popUpTo(0)
+                                    }
                                 }
                             }
                         }
@@ -119,6 +110,7 @@ fun TimeScheduleScreen(
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
+                                navController.navigate(Screen.TimeScheduleScreen.route)
                             }
                         }
                     )
@@ -136,8 +128,7 @@ fun TimeScheduleScreen(
                         onItemClick = {
                             scope.launch {
                                 sheetState.collapse()
-                                val currentScheduleId = (context.readIntFromDataStore("openedScheduleID") ?: -1).toString()
-                                navController.navigate(Screen.SubjectsScreen.withArgs(currentScheduleId, "-1"))
+                                navController.navigate(Screen.SubjectsScreen.withArgs("-1", "-1"))
                             }
                         }
                     )
@@ -153,31 +144,40 @@ fun TimeScheduleScreen(
                         },
                         title = "Архів розкладів",
                         onItemClick = {
-                            scope.launch{
+                            scope.launch {
                                 sheetState.collapse()
-                                navController.navigate(Screen.ArchiveScreen.route)
                             }
                         }
                     )
                 }
             )
-
         }
-    ) { _, _, _ ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 24.dp, bottom = 106.dp, start = 8.dp, end = 8.dp),
-            contentAlignment = Alignment.Center
+    ) { sheetState, _, snackBarState ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 106.dp, start = 8.dp, end = 8.dp),
         ){
-            TimeScheduleViewer(
-                modifier = Modifier
-                    .widthIn(max = 500.dp)
-                    .heightIn(max = 600.dp),
-                data = viewModel.timeSchedule.value
-            ){ lessonID, isStart ->
-                if(viewModel.isEditMode.value){
-                    viewModel.chooseNewTime(lessonID, isStart, context)
-                }
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            items(viewModel.schedulesList.value){ schedule ->
+                ScheduleCard(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    data = schedule,
+                    onCardClick = {
+                        viewModel.selectSchedule(schedule.scheduleID)
+                        navController.navigate(Screen.ScheduleScreen.withArgs(schedule.scheduleID.toString())){
+                            popUpTo(0)
+                        }
+                    },
+                    onScheduleDeleteClick = {
+
+                    }
+                )
             }
         }
     }

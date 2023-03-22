@@ -149,7 +149,12 @@ fun SubjectsScreen(
                                     )
                                 },
                                 title = "Архів розкладів",
-                                onItemClick = {}
+                                onItemClick = {
+                                    scope.launch{
+                                        sheetState.collapse()
+                                        navController.navigate(Screen.ArchiveScreen.route)
+                                    }
+                                }
                             )
                         }
                     )

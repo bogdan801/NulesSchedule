@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.prosto_key.nulesschedule.presentation.screens.archive.ArchiveScreen
 import com.prosto_key.nulesschedule.presentation.screens.schedule.ScheduleScreen
 import com.prosto_key.nulesschedule.presentation.screens.subjects.SubjectsScreen
 import com.prosto_key.nulesschedule.presentation.screens.time_schedule.TimeScheduleScreen
@@ -52,7 +53,7 @@ fun Navigation(
         }
 
         composable(Screen.ArchiveScreen.route){
-            //ArchiveScreen(navController = navController, launcher = launcher)
+            ArchiveScreen(navController = navController)
         }
     }
 }

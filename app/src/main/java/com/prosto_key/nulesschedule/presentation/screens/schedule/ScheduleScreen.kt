@@ -160,7 +160,12 @@ fun ScheduleScreen(
                                         )
                                     },
                                     title = "Архів розкладів",
-                                    onItemClick = {}
+                                    onItemClick = {
+                                        scope.launch{
+                                            sheetState.collapse()
+                                            navController.navigate(Screen.ArchiveScreen.route)
+                                        }
+                                    }
                                 )
                             }
                         }
