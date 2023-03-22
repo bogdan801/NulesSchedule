@@ -6,18 +6,15 @@ import com.prosto_key.nulesschedule.data.local.database.Dao
 import com.prosto_key.nulesschedule.data.local.database.entities.LessonEntity
 import com.prosto_key.nulesschedule.data.local.database.entities.SubjectEntity
 import com.prosto_key.nulesschedule.data.local.database.entities.TeachersOfSubjectEntity
-import com.prosto_key.nulesschedule.data.local.database.entities.TimeScheduleEntity
 import com.prosto_key.nulesschedule.data.local.excel_parsing.*
 import com.prosto_key.nulesschedule.data.mapper.*
 import com.prosto_key.nulesschedule.data.util.cutSubjectNameFromLesson
 import com.prosto_key.nulesschedule.data.util.isSimilarTo
-import com.prosto_key.nulesschedule.domain.model.Lesson
 import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.model.Subject
 import com.prosto_key.nulesschedule.domain.model.Teacher
 import com.prosto_key.nulesschedule.domain.model.time_schedule.LessonTime
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
-import com.prosto_key.nulesschedule.domain.model.week.Week
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -115,11 +112,11 @@ class RepositoryImpl(private val dao: Dao):Repository {
                 val teachers = subjectWithTeacher.teachers.map { teachersOfSubjectEntity ->
                     dao.getTeacherEntity(teachersOfSubjectEntity.teacherID).toTeacher(teachersOfSubjectEntity.isLector, teachersOfSubjectEntity.teachersOfSubjectID)
                 }
-                subjectWithTeacher.subject.toSubject(teachers.sortedBy { !it.isLector })
+                subjectWithTeacher.subject.toSubject(teachers.sortedBy { if(it.isLector != null) !it.isLector else true})
             }
         }
 
-    override fun getTeachersFlow() = dao.getTeacherEntities().map { it.map { entity -> entity.toTeacher(false) } }
+    override fun getTeachersFlow() = dao.getTeacherEntities().map { it.map { entity -> entity.toTeacher() } }
 
     //read excel
     private val fileBuffer: MutableState<ScheduleFileBuffer> = mutableStateOf(ScheduleFileBuffer())

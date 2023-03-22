@@ -158,7 +158,7 @@ fun TimeScheduleScreen(
             )
 
         }
-    ) { _, _ ->
+    ) { _, _, _ ->
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(top = 24.dp, bottom = 106.dp, start = 8.dp, end = 8.dp),

@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -173,7 +171,7 @@ fun SubjectsScreen(
                 }
             }
         }
-    ){ sheetState, _ ->
+    ){ sheetState, _ , snackBarState->
         val lazyColumnState = rememberLazyListState()
         LaunchedEffect(key1 = viewModel.preOpenedIndex){
             lazyColumnState.scrollToItem(viewModel.preOpenedIndex)
@@ -199,11 +197,19 @@ fun SubjectsScreen(
                     },
                     onTeacherDeleteClick = { teacher ->
                         viewModel.deleteTeacherFromSubject(teacher)
+                        scope.launch {
+                            snackBarState.currentSnackbarData?.dismiss()
+                            val result = snackBarState.showSnackbar("Викладача було видалено", "ВІДНОВИТИ", SnackbarDuration.Short)
+                            if(result == SnackbarResult.ActionPerformed){
+                                viewModel.reviveLastDeletedTeacher(subject)
+                            }
+                        }
                     },
                     onAddTeacherClick = {
                         showAddSheet = true
                         viewModel.setCurrentSubject(subject)
                         scope.launch {
+                            snackBarState.currentSnackbarData?.dismiss()
                             delay(400)
                             if(sheetState.isCollapsed) sheetState.expand()
                         }

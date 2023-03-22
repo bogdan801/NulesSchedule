@@ -200,7 +200,7 @@ fun ScheduleScreen(
                 }
             }
         }
-    ) { _, _ ->
+    ) { _, _, _ ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

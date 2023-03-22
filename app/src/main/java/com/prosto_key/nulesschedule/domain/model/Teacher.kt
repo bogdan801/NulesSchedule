@@ -4,7 +4,7 @@ data class Teacher(
     val teacherID: Int,
     val fullName: String,
     val teacherOfSubjectID: Int? = null,
-    val isLector: Boolean,
+    val isLector: Boolean?,
     val phoneNumber: String?,
     val email: String?,
     val additionalInfo: String?

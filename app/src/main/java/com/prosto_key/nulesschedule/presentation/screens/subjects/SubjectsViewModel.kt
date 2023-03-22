@@ -58,21 +58,37 @@ constructor(
     fun addTeacher(teacher: Teacher, isNew: Boolean){
         viewModelScope.launch {
             if(isNew) {
-                repository.insertTeacherAndAddToASubject(teacher, _currentSubject.value.subjectID, teacher.isLector)
+                repository.insertTeacherAndAddToASubject(teacher, _currentSubject.value.subjectID, teacher.isLector!!)
             }
             else {
                 if(_currentSubject.value.teachers != null && !_currentSubject.value.teachers!!.contains(teacher)){
-                    repository.addToTeacherToASubject(teacher.teacherID, _currentSubject.value.subjectID, teacher.isLector)
+                    repository.addToTeacherToASubject(teacher.teacherID, _currentSubject.value.subjectID, teacher.isLector!!)
                 }
             }
         }
     }
 
     //DELETE TEACHER
+    private val lastDeletedTeacher = mutableStateOf(Teacher(-1, "", null, null, null, null, null))
+
     fun deleteTeacherFromSubject(teacher: Teacher){
+        lastDeletedTeacher.value = teacher
         viewModelScope.launch {
             repository.deleteTeacher(teacher)
         }
+    }
+
+    fun reviveLastDeletedTeacher(subject: Subject){
+        viewModelScope.launch {
+            val isStillPresentInDB = _allTeachers.value.map { it.teacherID }.contains(lastDeletedTeacher.value.teacherID)
+            if(isStillPresentInDB){
+                repository.addToTeacherToASubject(lastDeletedTeacher.value.teacherID, subject.subjectID, lastDeletedTeacher.value.isLector!!)
+            }
+            else{
+                repository.insertTeacherAndAddToASubject(lastDeletedTeacher.value, subject.subjectID, lastDeletedTeacher.value.isLector!!)
+            }
+        }
+
     }
 
     init {

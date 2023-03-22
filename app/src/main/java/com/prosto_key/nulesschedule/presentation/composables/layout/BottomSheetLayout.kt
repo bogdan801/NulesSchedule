@@ -30,7 +30,7 @@ fun BottomSheetLayout(
     sheetElevation: Dp = 20.dp,
     sheetShape: Shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
     scrimAlpha: Float = 0.2f,
-    content: @Composable (sheetState: BottomSheetState, expansionFraction: Float) -> Unit
+    content: @Composable (sheetState: BottomSheetState, expansionFraction: Float,  snackBarState: SnackbarHostState) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -57,6 +57,16 @@ fun BottomSheetLayout(
         sheetContent = {
             sheetContent(sheetState, expansionFraction)
         },
+        snackbarHost = {
+            SnackbarHost(it) { data ->
+                Snackbar(
+                    actionColor = MaterialTheme.colors.secondary,
+                    backgroundColor = MaterialTheme.colors.surface,
+                    contentColor = MaterialTheme.colors.secondary,
+                    snackbarData = data
+                )
+            }
+        },
         backgroundColor = backgroundColor,
         sheetPeekHeight = sheetPeekHeight,
         sheetElevation = sheetElevation,
@@ -66,7 +76,7 @@ fun BottomSheetLayout(
             modifier = modifier,
             contentAlignment = Alignment.Center
         ){
-            content(sheetState, expansionFraction)
+            content(sheetState, expansionFraction, bottomSheetScaffoldState.snackbarHostState)
             if(expansionFraction != 0f){
                 Box(
                     modifier = Modifier
