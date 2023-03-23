@@ -1,7 +1,5 @@
 package com.prosto_key.nulesschedule.domain.repository
 
-import androidx.compose.runtime.MutableState
-import com.prosto_key.nulesschedule.data.local.excel_parsing.ScheduleFileBuffer
 import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.model.Subject
 import com.prosto_key.nulesschedule.domain.model.Teacher
@@ -20,6 +18,7 @@ interface Repository {
 
     //delete
     suspend fun deleteSchedule(scheduleID: Int)
+    suspend fun deleteRedundantTeachers()
     suspend fun deleteTeacher(teacher: Teacher)
 
     //select

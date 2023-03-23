@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.prosto_key.nulesschedule.domain.model.Schedule
@@ -21,6 +20,7 @@ import com.prosto_key.nulesschedule.domain.model.Schedule
 fun ScheduleCard(
     modifier: Modifier = Modifier,
     data: Schedule,
+    isSelected: Boolean = false,
     onCardClick: () -> Unit = {},
     onScheduleDeleteClick: () -> Unit = {}
 ) {
@@ -41,7 +41,7 @@ fun ScheduleCard(
                     .fillMaxWidth()
                     .height(80.dp)
                     .shadow(elevation = 10.dp)
-                    .background(MaterialTheme.colors.primary),
+                    .background(if(isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.primary),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(

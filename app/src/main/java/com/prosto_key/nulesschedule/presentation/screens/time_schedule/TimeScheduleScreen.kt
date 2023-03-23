@@ -122,43 +122,45 @@ fun TimeScheduleScreen(
                             }
                         }
                     )
-                    MenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(24.dp),
-                                painter = painterResource(id = R.drawable.ic_check),
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.secondary
-                            )
-                        },
-                        title = "Дисципліни групи",
-                        onItemClick = {
-                            scope.launch {
-                                sheetState.collapse()
-                                val currentScheduleId = (context.readIntFromDataStore("openedScheduleID") ?: -1).toString()
-                                navController.navigate(Screen.SubjectsScreen.withArgs(currentScheduleId, "-1"))
+                    if(viewModel.areSchedulesOpen.value){
+                        MenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(id = R.drawable.ic_check),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.secondary
+                                )
+                            },
+                            title = "Дисципліни групи",
+                            onItemClick = {
+                                scope.launch {
+                                    sheetState.collapse()
+                                    val currentScheduleId = (context.readIntFromDataStore("openedScheduleID") ?: -1).toString()
+                                    navController.navigate(Screen.SubjectsScreen.withArgs(currentScheduleId, "-1"))
+                                }
                             }
-                        }
-                    )
-                    MenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(22.dp),
-                                painter = painterResource(id = R.drawable.ic_archive),
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.secondary
-                            )
-                        },
-                        title = "Архів розкладів",
-                        onItemClick = {
-                            scope.launch{
-                                sheetState.collapse()
-                                navController.navigate(Screen.ArchiveScreen.route)
+                        )
+                        MenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(22.dp),
+                                    painter = painterResource(id = R.drawable.ic_archive),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.secondary
+                                )
+                            },
+                            title = "Архів розкладів",
+                            onItemClick = {
+                                scope.launch{
+                                    sheetState.collapse()
+                                    navController.navigate(Screen.ArchiveScreen.route)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             )
 

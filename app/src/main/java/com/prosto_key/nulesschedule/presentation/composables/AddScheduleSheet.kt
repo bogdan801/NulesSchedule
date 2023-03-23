@@ -47,7 +47,7 @@ fun AddScheduleSheet(
             .height(68.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CustomTextBox(
+            ReadOnlyTextCard(
                 modifier = Modifier
                     .height(50.dp)
                     .weight(1f)
@@ -58,9 +58,8 @@ fun AddScheduleSheet(
                             if(openedFileName.isNotBlank()) Toast.makeText(context, openedFileName, Toast.LENGTH_SHORT).show()
                         }
                     ),
-                placeholder = "Файл розкладу (.xlsx)",
                 text = openedFileName,
-                isReadOnly = true
+                placeholder = "Файл розкладу (.xlsx)"
             )
             Spacer(modifier = Modifier.width(8.dp))
             Button(

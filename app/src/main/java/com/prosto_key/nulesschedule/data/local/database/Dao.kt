@@ -73,4 +73,7 @@ interface Dao {
 
     @Query("SELECT * FROM scheduleentity WHERE fileName == :fileName AND major == :major AND year == :year AND `group` == :group")
     suspend fun getScheduleByItsContents(fileName: String, major: String, year: String, group: String): ScheduleEntity
+
+    @Query("SELECT * FROM teachersofsubjectentity")
+    suspend fun getAllTeachersOfSubjects(): List<TeachersOfSubjectEntity>
 }

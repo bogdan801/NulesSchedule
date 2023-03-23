@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +37,12 @@ constructor(
     private val context
         get() = getApplication<Application>()
 
+    val navScheduleIDArgument = handle.get<Int>("scheduleID") ?: -1
+
+    fun clearWorkBookState(){
+        workBookState.value = WorkBook(workBook = XSSFWorkbook())
+    }
+
     //SCHEDULE
     private val _selectedScheduleID =  mutableStateOf(-1)
     val selectedScheduleID: State<Int> =  _selectedScheduleID
@@ -47,6 +54,14 @@ constructor(
     }
 
     //OPEN FILE SHEET
+    private val _showAddSheet = mutableStateOf(false)
+    val showAddSheet: State<Boolean> = _showAddSheet
+
+    fun setShowAddSheetState(show: Boolean){
+        _showAddSheet.value = show
+    }
+
+
     val fileName = derivedStateOf { workBookState.value.fileName }
 
     fun openFile(launcher: ActivityResultLauncher<Intent>){
@@ -141,7 +156,6 @@ constructor(
         Toast.makeText(context, "Розклад відкрито і збережено", Toast.LENGTH_SHORT).show()
     }
 
-
     //SCHEDULE DISPLAY
     private val _currentDateTime =  mutableStateOf(getCurrentDateTime())
     val currentDateTime: State<LocalDateTime> = _currentDateTime
@@ -153,7 +167,7 @@ constructor(
         //selected value
         val currentScheduleId = handle.get<Int>("scheduleID") ?: -1
         //if selected value = -1 (app just launched)
-        if(currentScheduleId == -1){
+        if(currentScheduleId < 0){
             //reading from datastore
             runBlocking{
                 _selectedScheduleID.value = context.readIntFromDataStore("openedScheduleID") ?: -1
@@ -164,7 +178,8 @@ constructor(
         }
 
         //reading schedule from database
-        if(_selectedScheduleID.value != -1){
+        if(_selectedScheduleID.value >= 0){
+            println(_selectedScheduleID.value.toString())
             viewModelScope.launch {
                 schedule.value = repository.getFullSchedule(_selectedScheduleID.value)
             }
@@ -182,7 +197,5 @@ constructor(
         viewModelScope.launch {
             _timeSchedule.value = repository.getTimeScheduleFlow().first()
         }
-
-
     }
 }

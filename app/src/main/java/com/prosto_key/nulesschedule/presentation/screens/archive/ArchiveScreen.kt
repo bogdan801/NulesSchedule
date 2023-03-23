@@ -2,17 +2,18 @@ package com.prosto_key.nulesschedule.presentation.screens.archive
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,7 +72,12 @@ fun ArchiveScreen(
                     )
                 },
                 onRightActionClick = {
-                    TODO()
+                    scope.launch {
+                        sheetState.collapse()
+                        navController.navigate(Screen.ScheduleScreen.withArgs("-2")){
+                            popUpTo(0)
+                        }
+                    }
                 },
                 menuItems = {
                     MenuItem(
@@ -87,11 +93,9 @@ fun ArchiveScreen(
                         title = "Головна",
                         onItemClick = {
                             scope.launch{
-                                scope.launch{
-                                    sheetState.collapse()
-                                    navController.navigate(Screen.ScheduleScreen.withArgs("-1")){
-                                        popUpTo(0)
-                                    }
+                                sheetState.collapse()
+                                navController.navigate(Screen.ScheduleScreen.withArgs("-1")){
+                                    popUpTo(0)
                                 }
                             }
                         }
@@ -114,69 +118,97 @@ fun ArchiveScreen(
                             }
                         }
                     )
-                    MenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(24.dp),
-                                painter = painterResource(id = R.drawable.ic_check),
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.secondary
-                            )
-                        },
-                        title = "Дисципліни групи",
-                        onItemClick = {
-                            scope.launch {
-                                sheetState.collapse()
-                                navController.navigate(Screen.SubjectsScreen.withArgs("-1", "-1"))
+                    if(viewModel.schedulesList.value.isNotEmpty()){
+                        MenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(id = R.drawable.ic_check),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.secondary
+                                )
+                            },
+                            title = "Дисципліни групи",
+                            onItemClick = {
+                                scope.launch {
+                                    sheetState.collapse()
+                                    navController.navigate(Screen.SubjectsScreen.withArgs("-1", "-1"))
+                                }
                             }
-                        }
-                    )
-                    MenuItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        icon = {
-                            Icon(
-                                modifier = Modifier.size(22.dp),
-                                painter = painterResource(id = R.drawable.ic_archive),
-                                contentDescription = "",
-                                tint = MaterialTheme.colors.secondary
-                            )
-                        },
-                        title = "Архів розкладів",
-                        onItemClick = {
+                        )
+                        MenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(22.dp),
+                                    painter = painterResource(id = R.drawable.ic_archive),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.secondary
+                                )
+                            },
+                            title = "Архів розкладів",
+                            onItemClick = {
+                                scope.launch {
+                                    sheetState.collapse()
+                                }
+                            }
+                        )
+                    }
+                }
+            )
+        }
+    ) { _, _, snackBarState ->
+        if(viewModel.schedulesList.value.isNotEmpty()){
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 106.dp, start = 8.dp, end = 8.dp),
+            ){
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                itemsIndexed(viewModel.schedulesList.value){ id, schedule ->
+                    ScheduleCard(
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
+                            .height(160.dp),
+                        data = schedule,
+                        isSelected = schedule.scheduleID == viewModel.selectedSchedule.value,
+                        onCardClick = {
                             scope.launch {
-                                sheetState.collapse()
+                                viewModel.selectSchedule(schedule.scheduleID)
+                                navController.navigate(Screen.ScheduleScreen.withArgs(schedule.scheduleID.toString())){
+                                    popUpTo(0)
+                                }
+                            }
+                        },
+                        onScheduleDeleteClick = {
+                            scope.launch {
+                                snackBarState.currentSnackbarData?.dismiss()
+                                val result = snackBarState.showSnackbar("Ви дійсно бажаєте видалити даний розклад?", "ТАК", SnackbarDuration.Short)
+                                if(result == SnackbarResult.ActionPerformed){
+                                    viewModel.deleteSchedule(schedule, id)
+                                }
                             }
                         }
                     )
                 }
-            )
-        }
-    ) { sheetState, _, snackBarState ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 106.dp, start = 8.dp, end = 8.dp),
-        ){
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
             }
-            items(viewModel.schedulesList.value){ schedule ->
-                ScheduleCard(
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .fillMaxWidth()
-                        .height(160.dp),
-                    data = schedule,
-                    onCardClick = {
-                        viewModel.selectSchedule(schedule.scheduleID)
-                        navController.navigate(Screen.ScheduleScreen.withArgs(schedule.scheduleID.toString())){
-                            popUpTo(0)
-                        }
-                    },
-                    onScheduleDeleteClick = {
-
-                    }
+        }
+        else{
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 106.dp, start = 40.dp, end = 40.dp),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "Розкладу ще не додано.\nНатисніть на \"+\" та відкрийте файл розкладу",
+                    style = MaterialTheme.typography.h5,
+                    color = MaterialTheme.colors.secondary,
+                    textAlign = TextAlign.Center
                 )
             }
         }

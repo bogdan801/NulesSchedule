@@ -8,7 +8,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.prosto_key.nulesschedule.data.util.getCurrentDateTime
+import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.util.isTimeBetween
 import com.prosto_key.nulesschedule.data.util.timeToLocalDateTime
 import com.prosto_key.nulesschedule.data.util.toTimeString
@@ -17,8 +17,6 @@ import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +26,11 @@ constructor(
     private val repository: Repository,
     application: Application
 ): AndroidViewModel(application) {
-    //TIMESCHEDULE
+    //CONTEXT
+    private val context
+        get() = getApplication<Application>()
+
+    //TIME-SCHEDULE
     private val _timeSchedule = mutableStateOf(TimeSchedule(listOf()))
     val timeSchedule: State<TimeSchedule> =  _timeSchedule
 
@@ -86,7 +88,14 @@ constructor(
         _isEditMode.value = value
     }
 
+    private val _areSchedulesOpen = mutableStateOf(false)
+    val areSchedulesOpen: State<Boolean> = _areSchedulesOpen
+
     init {
+        viewModelScope.launch {
+            _areSchedulesOpen.value = (context.readIntFromDataStore("openedScheduleID") ?: -1) >= 0
+        }
+
         viewModelScope.launch {
             repository.getTimeScheduleFlow().collect{ newSchedule ->
                 _timeSchedule.value = newSchedule

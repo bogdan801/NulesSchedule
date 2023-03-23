@@ -9,7 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -35,9 +34,6 @@ fun ScheduleScreen(
     launcher: ActivityResultLauncher<Intent>
 ) {
     val scope = rememberCoroutineScope()
-    var showAddSheet by rememberSaveable {
-        mutableStateOf(false)
-    }
 
     BottomSheetLayout(
         modifier = Modifier
@@ -46,11 +42,18 @@ fun ScheduleScreen(
         sheetContent = { sheetState, expansionFraction ->
             LaunchedEffect(key1 = sheetState.isCollapsed){
                 if(sheetState.isCollapsed) {
-                    showAddSheet = false
+                    viewModel.setShowAddSheetState(false)
+                }
+            }
+            LaunchedEffect(key1 = viewModel.navScheduleIDArgument){
+                if(viewModel.navScheduleIDArgument == -2){
+                    viewModel.setShowAddSheetState(true)
+                    delay(400)
+                    if(sheetState.isCollapsed) sheetState.expand()
                 }
             }
             AnimatedContent(
-                targetState = showAddSheet,
+                targetState = viewModel.showAddSheet.value,
                 transitionSpec = {
                     fadeIn() with fadeOut()
                 }
@@ -88,7 +91,7 @@ fun ScheduleScreen(
                             )
                         },
                         onRightActionClick = {
-                            showAddSheet = true
+                            viewModel.setShowAddSheetState(true)
                             scope.launch {
                                 delay(400)
                                 if(sheetState.isCollapsed) sheetState.expand()
@@ -126,6 +129,7 @@ fun ScheduleScreen(
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
+                                        viewModel.clearWorkBookState()
                                         navController.navigate(Screen.TimeScheduleScreen.route)
                                     }
                                 }
@@ -145,6 +149,7 @@ fun ScheduleScreen(
                                     onItemClick = {
                                         scope.launch {
                                             sheetState.collapse()
+                                            viewModel.clearWorkBookState()
                                             navController.navigate(Screen.SubjectsScreen.withArgs("${viewModel.selectedScheduleID.value}", "-1"))
                                         }
                                     }
@@ -163,6 +168,7 @@ fun ScheduleScreen(
                                     onItemClick = {
                                         scope.launch{
                                             sheetState.collapse()
+                                            viewModel.clearWorkBookState()
                                             navController.navigate(Screen.ArchiveScreen.route)
                                         }
                                     }

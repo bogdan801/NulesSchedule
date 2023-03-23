@@ -76,6 +76,16 @@ class RepositoryImpl(private val dao: Dao):Repository {
         dao.deleteScheduleEntity(scheduleID)
     }
 
+    override suspend fun deleteRedundantTeachers(){
+        val teachers = dao.getTeacherEntities().first()
+        val teachersOfSubjectsIDs = dao.getAllTeachersOfSubjects().map { it.teacherID }
+        teachers.forEach{ teacherEntity ->
+            if(!teachersOfSubjectsIDs.contains(teacherEntity.teacherID)){
+                dao.deleteTeacherEntity(teacherEntity.teacherID)
+            }
+        }
+    }
+
     override suspend fun deleteTeacher(teacher: Teacher) {
         dao.deleteTeachersOfSubjectEntity(teacher.teacherOfSubjectID!!)
         if(dao.isTeacherInAnySubject(teacher.teacherID).isEmpty()){
