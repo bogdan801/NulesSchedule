@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,7 +28,8 @@ fun AddScheduleSheet(
     groups: List<String> = listOf(),
     selectedGroup: Int = 0,
     onGroupSelected: (index: Int, text: String) -> Unit = { _: Int, _: String -> },
-    onSelectScheduleClick: () -> Unit = {}
+    onSelectScheduleClick: () -> Unit = {},
+    isLoading: Boolean = false
 ) {
     val context = LocalContext.current
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
@@ -55,7 +53,9 @@ fun AddScheduleSheet(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
-                            if(openedFileName.isNotBlank()) Toast.makeText(context, openedFileName, Toast.LENGTH_SHORT).show()
+                            if (openedFileName.isNotBlank()) Toast
+                                .makeText(context, openedFileName, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     ),
                 text = openedFileName,
@@ -63,9 +63,7 @@ fun AddScheduleSheet(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Button(
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(120.dp),
+                modifier = Modifier.height(50.dp),
                 onClick = onOpenFileClick,
                 shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.buttonColors(
@@ -85,7 +83,7 @@ fun AddScheduleSheet(
                 .padding(bottom = 4.dp)
                 .fillMaxWidth()
                 .height(50.dp),
-            title = "Напрям",
+            title = "Спеціальність",
             data = majors,
             index = selectedMajor,
             onItemSelected = onMajorSelected,
@@ -118,18 +116,31 @@ fun AddScheduleSheet(
             contentAlignment = Alignment.Center
         ){
             Button(
-                modifier = Modifier.size(200.dp, 55.dp),
+                modifier = Modifier.size(220.dp, 55.dp),
                 onClick = onSelectScheduleClick,
                 shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary
-                )
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    disabledBackgroundColor = MaterialTheme.colors.secondary
+                ),
+                enabled = !isLoading
             ) {
-                Text(
-                    text = "ОБРАТИ РОЗКЛАД",
-                    style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.onPrimary
-                )
+                if(!isLoading){
+                    Text(
+                        text = "ОБРАТИ РОЗКЛАД",
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+                else{
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .offset(y = (-1).dp),
+                        color = MaterialTheme.colors.surface,
+                        strokeWidth = 3.dp
+                    )
+                }
             }
         }
     }

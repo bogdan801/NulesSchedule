@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Розклад НУБіП</string>
+    <string name="home">Головна</string>
+    <string name="time_schedule">Розклад дзвінків</string>
 </resources>

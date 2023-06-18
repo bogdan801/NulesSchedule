@@ -16,10 +16,8 @@ import com.prosto_key.nulesschedule.domain.model.Schedule
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import javax.inject.Inject
@@ -119,10 +117,16 @@ constructor(
         _selectedGroup.value = id
     }
 
-    fun selectSchedule(){
+    private val _isSheetLoading =  mutableStateOf(false)
+    val isSheetLoading: State<Boolean> =  _isSheetLoading
+    suspend fun selectSchedule(): Boolean {
+        _isSheetLoading.value = true
         if(majors.value.isEmpty() || years.value.isEmpty() || groups.value.isEmpty()) {
-            Toast.makeText(context, "Розклад не обрано!", Toast.LENGTH_SHORT).show()
-            return
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Розклад не обрано!", Toast.LENGTH_SHORT).show()
+            }
+            _isSheetLoading.value = false
+            return false
         }
         val week = repository.readWeekFromFile(
             workbook = workBookState.value.workBook,
@@ -153,7 +157,11 @@ constructor(
             }
         }
 
-        Toast.makeText(context, "Розклад відкрито і збережено", Toast.LENGTH_SHORT).show()
+        _isSheetLoading.value = false
+        withContext(Dispatchers.Main) {
+            Toast.makeText(context, "Розклад відкрито і збережено", Toast.LENGTH_SHORT).show()
+        }
+        return true
     }
 
     //SCHEDULE DISPLAY

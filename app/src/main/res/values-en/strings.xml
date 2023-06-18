@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NULES Schedule</string>
+    <string name="home">Home</string>
+    <string name="time_schedule">TIme schedule</string>
+</resources>

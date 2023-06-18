@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -23,6 +24,7 @@ import com.prosto_key.nulesschedule.presentation.composables.ScheduleViewer
 import com.prosto_key.nulesschedule.presentation.composables.layout.BottomSheetLayout
 import com.prosto_key.nulesschedule.presentation.composables.repeatable.MenuItem
 import com.prosto_key.nulesschedule.presentation.navigation.Screen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,7 +65,7 @@ fun ScheduleScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(520.dp),
-                        title = "Розклад НУБіП",
+                        title = stringResource(id = R.string.app_name),
                         leftIcon = {
                             Icon(
                                 modifier = Modifier
@@ -108,7 +110,7 @@ fun ScheduleScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Головна",
+                                title = stringResource(id = R.string.home),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -202,11 +204,13 @@ fun ScheduleScreen(
                             viewModel.selectGroup(id)
                         },
                         onSelectScheduleClick = {
-                            viewModel.selectSchedule()
-                            scope.launch{
-                                sheetState.collapse()
+                            scope.launch(Dispatchers.IO){
+                                if(viewModel.selectSchedule()){
+                                    sheetState.collapse()
+                                }
                             }
-                        }
+                        },
+                        isLoading = viewModel.isSheetLoading.value
                     )
                 }
             }
