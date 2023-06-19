@@ -1,7 +1,6 @@
 package com.prosto_key.nulesschedule.presentation
 
 import android.app.Activity
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -23,7 +22,6 @@ import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
 import com.prosto_key.nulesschedule.presentation.navigation.Navigation
 import com.prosto_key.nulesschedule.presentation.theme.NulesScheduleTheme
-import com.prosto_key.nulesschedule.presentation.util.LockScreenOrientation
 import com.prosto_key.nulesschedule.presentation.util.queryName
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -32,7 +30,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var workbookState: MutableState<WorkBook>
 
@@ -54,7 +51,6 @@ class MainActivity : ComponentActivity() {
 
         setTheme(R.style.GreenTheme)
         setContent {
-            LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             NulesScheduleTheme {
                 val systemUiController = rememberSystemUiController()
                 systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
