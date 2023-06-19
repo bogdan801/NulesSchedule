@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,7 +63,7 @@ fun SubjectsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(520.dp),
-                        title = "Дисципліни групи",
+                        title = stringResource(id = R.string.subjects),
                         titleFontSize = 21.sp,
                         leftIcon = {
                             Icon(
@@ -93,7 +94,7 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Головна",
+                                title = stringResource(id = R.string.home),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -113,7 +114,7 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Розклад дзвінків",
+                                title = stringResource(id = R.string.time_schedule),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -131,7 +132,7 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Дисципліни групи",
+                                title = stringResource(id = R.string.subjects),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -148,7 +149,7 @@ fun SubjectsScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Архів розкладів",
+                                title = stringResource(id = R.string.archive),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -170,7 +171,7 @@ fun SubjectsScreen(
                             scope.launch {
                                 sheetState.collapse()
                             }
-                            Toast.makeText(context, "Викладача додано", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.professor_added), Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
@@ -204,7 +205,7 @@ fun SubjectsScreen(
                         viewModel.deleteTeacherFromSubject(teacher)
                         scope.launch {
                             snackBarState.currentSnackbarData?.dismiss()
-                            val result = snackBarState.showSnackbar("Викладача було видалено", "ВІДНОВИТИ", SnackbarDuration.Short)
+                            val result = snackBarState.showSnackbar(context.getString(R.string.professor_deleted), context.getString(R.string.restore), SnackbarDuration.Short)
                             if(result == SnackbarResult.ActionPerformed){
                                 viewModel.reviveLastDeletedTeacher(subject)
                             }

@@ -12,7 +12,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +35,7 @@ fun ArchiveScreen(
     viewModel: ArchiveViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     BottomSheetLayout(
         modifier = Modifier
@@ -43,7 +46,7 @@ fun ArchiveScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(520.dp),
-                title = "Архів розкладів",
+                title = stringResource(id = R.string.archive),
                 titleFontSize = 21.sp,
                 leftIcon = {
                     Icon(
@@ -90,7 +93,7 @@ fun ArchiveScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Головна",
+                        title = stringResource(id = R.string.home),
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
@@ -110,7 +113,7 @@ fun ArchiveScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Розклад дзвінків",
+                        title = stringResource(id = R.string.time_schedule),
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
@@ -129,7 +132,7 @@ fun ArchiveScreen(
                                     tint = MaterialTheme.colors.secondary
                                 )
                             },
-                            title = "Дисципліни групи",
+                            title = stringResource(id = R.string.subjects),
                             onItemClick = {
                                 scope.launch {
                                     sheetState.collapse()
@@ -147,7 +150,7 @@ fun ArchiveScreen(
                                     tint = MaterialTheme.colors.secondary
                                 )
                             },
-                            title = "Архів розкладів",
+                            title = stringResource(id = R.string.archive),
                             onItemClick = {
                                 scope.launch {
                                     sheetState.collapse()
@@ -187,7 +190,7 @@ fun ArchiveScreen(
                         onScheduleDeleteClick = {
                             scope.launch {
                                 snackBarState.currentSnackbarData?.dismiss()
-                                val result = snackBarState.showSnackbar("Ви дійсно бажаєте видалити даний розклад?", "ТАК", SnackbarDuration.Short)
+                                val result = snackBarState.showSnackbar(context.getString(R.string.delete_confirm), context.getString(R.string.yes), SnackbarDuration.Short)
                                 if(result == SnackbarResult.ActionPerformed){
                                     viewModel.deleteSchedule(schedule, id)
                                 }
@@ -205,7 +208,7 @@ fun ArchiveScreen(
                 contentAlignment = Alignment.Center
             ){
                 Text(
-                    text = "Розкладу ще не додано.\nНатисніть на \"+\" та відкрийте файл розкладу",
+                    text = stringResource(id = R.string.schedule_isnt_added_yet) + ".\n " + stringResource(id = R.string.press_plus),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.secondary,
                     textAlign = TextAlign.Center

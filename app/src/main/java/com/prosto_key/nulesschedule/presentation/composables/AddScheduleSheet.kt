@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.prosto_key.nulesschedule.R
 
 @Composable
 fun AddScheduleSheet(
@@ -59,7 +61,7 @@ fun AddScheduleSheet(
                         }
                     ),
                 text = openedFileName,
-                placeholder = "Файл розкладу (.xlsx)"
+                placeholder = stringResource(id = R.string.schedule_file)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Button(
@@ -71,7 +73,7 @@ fun AddScheduleSheet(
                 )
             ) {
                 Text(
-                    text = "ВІДКРИТИ",
+                    text = stringResource(id = R.string.open),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -83,7 +85,7 @@ fun AddScheduleSheet(
                 .padding(bottom = 4.dp)
                 .fillMaxWidth()
                 .height(50.dp),
-            title = "Спеціальність",
+            title = stringResource(id = R.string.major),
             data = majors,
             index = selectedMajor,
             onItemSelected = onMajorSelected,
@@ -94,7 +96,7 @@ fun AddScheduleSheet(
                 .padding(bottom = 4.dp)
                 .fillMaxWidth()
                 .height(50.dp),
-            title = "Курс",
+            title = stringResource(id = R.string.year),
             data = years,
             index = selectedYear,
             onItemSelected = onYearSelected,
@@ -105,7 +107,7 @@ fun AddScheduleSheet(
                 .padding(bottom = 4.dp)
                 .fillMaxWidth()
                 .height(50.dp),
-            title = "Група",
+            title = stringResource(id = R.string.group),
             data = groups,
             index = selectedGroup,
             onItemSelected = onGroupSelected,
@@ -127,7 +129,7 @@ fun AddScheduleSheet(
             ) {
                 if(!isLoading){
                     Text(
-                        text = "ОБРАТИ РОЗКЛАД",
+                        text = stringResource(id = R.string.select_schedule),
                         style = MaterialTheme.typography.h5,
                         color = MaterialTheme.colors.onPrimary
                     )

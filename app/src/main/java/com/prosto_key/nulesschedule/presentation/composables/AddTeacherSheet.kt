@@ -15,8 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.domain.model.Teacher
 
 @Composable
@@ -56,7 +58,7 @@ fun AddTeacherSheet(
                         isLector = true
                     }
                 ),
-                text = "ЛЕКТОР",
+                text = stringResource(id = R.string.lecturer),
                 style = MaterialTheme.typography.h4,
                 color = lectorColor
             )
@@ -69,7 +71,7 @@ fun AddTeacherSheet(
                         isLector = false
                     }
                 ),
-                text = "ПРАКТИК",
+                text = stringResource(id = R.string.practitioner),
                 style = MaterialTheme.typography.h4,
                 color = practicColor
             )
@@ -83,11 +85,11 @@ fun AddTeacherSheet(
                 .fillMaxWidth()
                 .height(80.dp),
             text = fullName,
-            title = "ПІБ викладача",
-            placeholder = "Введіть ПІБ або оберіть зі списку",
+            title = stringResource(id = R.string.professors_full_name),
+            placeholder = stringResource(id = R.string.enter_full_name),
             isReadOnly = readOnly,
             selectedIndex = index,
-            dropDownItems = listOf("Додати нового") + teachers.map { it.fullName },
+            dropDownItems = listOf(stringResource(id = R.string.add_new)) + teachers.map { it.fullName },
             onTextChange = { newText ->
                 fullName = newText
             },
@@ -116,8 +118,8 @@ fun AddTeacherSheet(
                 .fillMaxWidth()
                 .height(80.dp),
             text = phoneNumber,
-            title = "Номер телефону",
-            placeholder = "Введіть номер телефону",
+            title = stringResource(id = R.string.phone_number),
+            placeholder = stringResource(id = R.string.enter_phone_number),
             isReadOnly = index != 0,
             selectedIndex = index,
             onTextChange = { newText ->
@@ -132,8 +134,8 @@ fun AddTeacherSheet(
                 .fillMaxWidth()
                 .height(80.dp),
             text = email,
-            title = "Пошта",
-            placeholder = "Введіть електронну адресу",
+            title = stringResource(id = R.string.email),
+            placeholder = stringResource(id = R.string.enter_email),
             isReadOnly = index != 0,
             selectedIndex = index,
             onTextChange = { newText ->
@@ -148,15 +150,15 @@ fun AddTeacherSheet(
                 .fillMaxWidth()
                 .height(80.dp),
             text = additionalInfo,
-            title = "Додатково",
-            placeholder = "Введіть додаткову інформацію",
+            title = stringResource(id = R.string.additionally),
+            placeholder = stringResource(id = R.string.enter_additional_info),
             isReadOnly = index != 0,
             selectedIndex = index,
             onTextChange = { newText ->
                 if(newText.length <= 40){
                     additionalInfo = newText
                 }
-                else Toast.makeText(context, "Максимальна кількість символів - 40", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(context, context.getString(R.string.max_characters), Toast.LENGTH_SHORT).show()
 
             },
             keyboardType = KeyboardType.Email
@@ -193,7 +195,7 @@ fun AddTeacherSheet(
                             )
                             onAddTeacherClick(teacher, true)
                         }
-                        else Toast.makeText(context, "Поле ім'я не може бути порожнім!", Toast.LENGTH_SHORT).show()
+                        else Toast.makeText(context, context.getString(R.string.name_cant_be_empty), Toast.LENGTH_SHORT).show()
                     }
                     else onAddTeacherClick(teachers[index-1].copy(isLector = isLector), false)
                 },
@@ -204,7 +206,7 @@ fun AddTeacherSheet(
                 shape = MaterialTheme.shapes.large
             ) {
                 Text(
-                    text = "ДОДАТИ",
+                    text = stringResource(id = R.string.add),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onPrimary
                 )

@@ -1,5 +1,7 @@
 package com.prosto_key.nulesschedule.data.util
 
+import android.content.Context
+import com.prosto_key.nulesschedule.R
 import kotlinx.datetime.*
 import java.time.DayOfWeek
 
@@ -7,37 +9,37 @@ fun getCurrentDateTime() = Clock.System.now().toLocalDateTime(TimeZone.currentSy
 
 fun LocalDate.asFormattedString() = "${dayOfMonth.toString().padStart(2, '0')}.${monthNumber.toString().padStart(2, '0')}.$year"
 
-fun LocalDateTime.dayOfWeekToString(): String = when(this.dayOfWeek){
-    DayOfWeek.MONDAY    -> "Понеділок"
-    DayOfWeek.TUESDAY   -> "Вівторок"
-    DayOfWeek.WEDNESDAY -> "Середа"
-    DayOfWeek.THURSDAY  -> "Четвер"
-    DayOfWeek.FRIDAY    -> "П'ятниця"
-    DayOfWeek.SATURDAY  -> "Субота"
-    DayOfWeek.SUNDAY    -> "Неділя"
+fun LocalDateTime.dayOfWeekToString(context: Context): String = when(this.dayOfWeek){
+    DayOfWeek.MONDAY    -> context.getString(R.string.monday)
+    DayOfWeek.TUESDAY   -> context.getString(R.string.tuesday)
+    DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday)
+    DayOfWeek.THURSDAY  -> context.getString(R.string.thursday)
+    DayOfWeek.FRIDAY    -> context.getString(R.string.friday)
+    DayOfWeek.SATURDAY  -> context.getString(R.string.saturday)
+    DayOfWeek.SUNDAY    -> context.getString(R.string.sunday)
 }
 
-fun Int.getDayOfWeekName(short: Boolean = false) = if(!short){
+fun Int.getDayOfWeekName(short: Boolean = false, context: Context) = if(!short){
     when(this % 7){
-        0 -> "Понеділок"
-        1 -> "Вівторок"
-        2 -> "Середа"
-        3 -> "Четвер"
-        4 -> "П'ятниця"
-        5 -> "Субота"
-        6 -> "Неділя"
+        0 -> context.getString(R.string.monday)
+        1 -> context.getString(R.string.tuesday)
+        2 -> context.getString(R.string.wednesday)
+        3 -> context.getString(R.string.thursday)
+        4 -> context.getString(R.string.friday)
+        5 -> context.getString(R.string.saturday)
+        6 -> context.getString(R.string.sunday)
         else -> ""
     }
 }
 else{
     when(this % 7){
-        0 -> "ПН"
-        1 -> "ВТ"
-        2 -> "СР"
-        3 -> "ЧТ"
-        4 -> "ПТ"
-        5 -> "СБ"
-        6 -> "НД"
+        0 -> context.getString(R.string.mo)
+        1 -> context.getString(R.string.tu)
+        2 -> context.getString(R.string.we)
+        3 -> context.getString(R.string.th)
+        4 -> context.getString(R.string.fr)
+        5 -> context.getString(R.string.sa)
+        6 -> context.getString(R.string.su)
         else -> ""
     }
 }

@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 with(contentResolver.openInputStream(uri)){
                     if(this != null){
                         workbookState.value = WorkBook(workBook = XSSFWorkbook(this), fileName = queryName(contentResolver, uri))
-                        Toast.makeText(this@MainActivity, "Файл відкрито", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, this@MainActivity.getString(R.string.file_opened), Toast.LENGTH_LONG).show()
                     }
                 }
             }

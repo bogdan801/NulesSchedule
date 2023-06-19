@@ -1,8 +1,6 @@
 package com.prosto_key.nulesschedule.presentation.composables.repeatable
 
-import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,12 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onPlaced
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.prosto_key.nulesschedule.R
@@ -34,19 +28,6 @@ fun SubjectCard(
     onAddTeacherClick: () -> Unit = {},
     onTeacherDeleteClick: (teacher: Teacher) -> Unit = {}
 ) {
-    val density = LocalDensity.current
-    var teachersHeight by remember { mutableStateOf(0.dp)}
-
-    val contentHeight by remember {
-        derivedStateOf {
-            if (data.teachers == null || data.teachers.isEmpty()) 160.dp
-            else 60.dp + teachersHeight
-        }
-    }
-
-    val cardHeight by animateDpAsState(
-        targetValue = if(!isExpanded) 80.dp else 80.dp + contentHeight
-    )
     Card(
         modifier = modifier,
         border = BorderStroke(1.dp, MaterialTheme.colors.primary),
@@ -109,7 +90,7 @@ fun SubjectCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Викладачі",
+                            text = stringResource(id = R.string.professors),
                             style = MaterialTheme.typography.h5,
                             color = MaterialTheme.colors.secondary
                         )
@@ -122,7 +103,7 @@ fun SubjectCard(
                             shape = MaterialTheme.shapes.large
                         ) {
                             Text(
-                                text = "ДОДАТИ",
+                                text = stringResource(id = R.string.add),
                                 style = MaterialTheme.typography.h6,
                                 color = MaterialTheme.colors.onPrimary
                             )
@@ -151,7 +132,7 @@ fun SubjectCard(
                                 contentAlignment = Alignment.Center
                             ){
                                 Text(
-                                    text = "Викладачів ще не додано",
+                                    text = stringResource(id = R.string.professors_not_added_yet),
                                     style = MaterialTheme.typography.h6,
                                     color = MaterialTheme.colors.secondaryVariant
                                 )

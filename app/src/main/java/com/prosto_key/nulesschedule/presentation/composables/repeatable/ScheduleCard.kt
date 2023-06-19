@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.domain.model.Schedule
 
 @Composable
@@ -41,7 +43,7 @@ fun ScheduleCard(
                     .fillMaxWidth()
                     .height(80.dp)
                     .shadow(elevation = 10.dp)
-                    .background(if(isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.primary),
+                    .background(if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.primary),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -80,7 +82,7 @@ fun ScheduleCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Напрям",
+                        text = stringResource(id = R.string.major),
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1
                     )
@@ -108,7 +110,7 @@ fun ScheduleCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Курс",
+                        text = stringResource(id = R.string.year),
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1
                     )
@@ -136,7 +138,7 @@ fun ScheduleCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Група",
+                        text = stringResource(id = R.string.group),
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1
                     )

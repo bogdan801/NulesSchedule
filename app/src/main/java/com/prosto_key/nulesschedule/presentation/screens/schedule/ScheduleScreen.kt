@@ -127,7 +127,7 @@ fun ScheduleScreen(
                                         tint = MaterialTheme.colors.secondary
                                     )
                                 },
-                                title = "Розклад дзвінків",
+                                title = stringResource(id = R.string.time_schedule),
                                 onItemClick = {
                                     scope.launch{
                                         sheetState.collapse()
@@ -147,7 +147,7 @@ fun ScheduleScreen(
                                             tint = MaterialTheme.colors.secondary
                                         )
                                     },
-                                    title = "Дисципліни групи",
+                                    title = stringResource(id = R.string.subjects),
                                     onItemClick = {
                                         scope.launch {
                                             sheetState.collapse()
@@ -166,7 +166,7 @@ fun ScheduleScreen(
                                             tint = MaterialTheme.colors.secondary
                                         )
                                     },
-                                    title = "Архів розкладів",
+                                    title = stringResource(id = R.string.archive),
                                     onItemClick = {
                                         scope.launch{
                                             sheetState.collapse()

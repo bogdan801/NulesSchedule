@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,7 +54,7 @@ fun TimeScheduleScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(520.dp),
-                title = if(!viewModel.isEditMode.value) "Розклад дзвінків" else "Редагування розкладу",
+                title = if(!viewModel.isEditMode.value) stringResource(id = R.string.time_schedule) else stringResource(id = R.string.edit_schedule),
                 titleFontSize = 21.sp,
                 leftIcon = {
                     Icon(
@@ -95,7 +96,7 @@ fun TimeScheduleScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Головна",
+                        title = stringResource(id = R.string.home),
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
@@ -115,7 +116,7 @@ fun TimeScheduleScreen(
                                 tint = MaterialTheme.colors.secondary
                             )
                         },
-                        title = "Розклад дзвінків",
+                        title = stringResource(id = R.string.time_schedule),
                         onItemClick = {
                             scope.launch{
                                 sheetState.collapse()
@@ -133,7 +134,7 @@ fun TimeScheduleScreen(
                                     tint = MaterialTheme.colors.secondary
                                 )
                             },
-                            title = "Дисципліни групи",
+                            title = stringResource(id = R.string.subjects),
                             onItemClick = {
                                 scope.launch {
                                     sheetState.collapse()
@@ -152,7 +153,7 @@ fun TimeScheduleScreen(
                                     tint = MaterialTheme.colors.secondary
                                 )
                             },
-                            title = "Архів розкладів",
+                            title = stringResource(id = R.string.archive),
                             onItemClick = {
                                 scope.launch{
                                     sheetState.collapse()

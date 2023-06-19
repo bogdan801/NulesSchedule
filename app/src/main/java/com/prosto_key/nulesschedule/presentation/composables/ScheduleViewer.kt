@@ -1,6 +1,5 @@
 package com.prosto_key.nulesschedule.presentation.composables
 
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -14,16 +13,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.datastore.saveIntToDataStore
 import com.prosto_key.nulesschedule.data.util.*
 import com.prosto_key.nulesschedule.domain.model.Lesson
-import com.prosto_key.nulesschedule.domain.model.time_schedule.CurrentLesson
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
 import com.prosto_key.nulesschedule.domain.model.week.Week
 import com.prosto_key.nulesschedule.presentation.composables.repeatable.LessonEntry
@@ -45,7 +43,7 @@ fun ScheduleViewer(
     if(data == null){
         Box(modifier = modifier.padding(40.dp), contentAlignment = Alignment.Center){
             Text(
-                text = "Натисніть на \"+\" та додайте файл розкладу",
+                text = stringResource(id = R.string.press_plus),
                 style = MaterialTheme.typography.h5,
                 color = MaterialTheme.colors.secondary,
                 textAlign = TextAlign.Center
@@ -125,7 +123,7 @@ fun ScheduleViewer(
                         ) {
 
                             Text(
-                                text = day.getDayOfWeekName().uppercase(),
+                                text = day.getDayOfWeekName(context = context).uppercase(),
                                 style = MaterialTheme.typography.h1,
                                 color = MaterialTheme.colors.onPrimary
                             )
@@ -201,7 +199,7 @@ fun ScheduleViewer(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = if (isNumerator) "Чисельник" else "Знаменник",
+                                text = if (isNumerator) stringResource(id = R.string.numerator) else stringResource(id = R.string.denominator),
                                 color = MaterialTheme.colors.onPrimary,
                                 style = MaterialTheme.typography.h5
                             )
@@ -253,7 +251,7 @@ fun ScheduleViewer(
                                 contentAlignment = Alignment.Center
                             ){
                                 Text(
-                                    text = dayID.getDayOfWeekName(short = true),
+                                    text = dayID.getDayOfWeekName(short = true, context = context),
                                     color = MaterialTheme.colors.onPrimary,
                                     style = MaterialTheme.typography.h5
                                 )
@@ -285,7 +283,7 @@ fun ScheduleViewer(
                                 }
                             ) { dayID ->
                                 Text(
-                                    text = dayID.getDayOfWeekName(short = true),
+                                    text = dayID.getDayOfWeekName(short = true, context = context),
                                     color = MaterialTheme.colors.secondary,
                                     style = MaterialTheme.typography.h3
                                 )

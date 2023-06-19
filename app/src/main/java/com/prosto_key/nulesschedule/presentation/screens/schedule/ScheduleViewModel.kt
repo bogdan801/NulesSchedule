@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.datastore.saveIntToDataStore
 import com.prosto_key.nulesschedule.data.local.excel_parsing.WorkBook
@@ -123,7 +124,7 @@ constructor(
         _isSheetLoading.value = true
         if(majors.value.isEmpty() || years.value.isEmpty() || groups.value.isEmpty()) {
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Розклад не обрано!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.not_selected), Toast.LENGTH_SHORT).show()
             }
             _isSheetLoading.value = false
             return false
@@ -159,7 +160,7 @@ constructor(
 
         _isSheetLoading.value = false
         withContext(Dispatchers.Main) {
-            Toast.makeText(context, "Розклад відкрито і збережено", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.selected), Toast.LENGTH_SHORT).show()
         }
         return true
     }

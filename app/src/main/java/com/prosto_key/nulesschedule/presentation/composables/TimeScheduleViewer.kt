@@ -10,9 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.prosto_key.nulesschedule.domain.model.time_schedule.TimeSchedule
+import com.prosto_key.nulesschedule.R
 
 @Composable
 fun TimeScheduleViewer(
@@ -37,7 +39,7 @@ fun TimeScheduleViewer(
                 contentAlignment = Alignment.Center
             ){
                 Text(
-                    text = "Розклад початку і закінчення\nзанять",
+                    text = stringResource(id = R.string.time_schedule_title),
                     color = MaterialTheme.colors.onPrimary,
                     style = MaterialTheme.typography.h4,
                     textAlign = TextAlign.Center

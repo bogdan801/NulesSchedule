@@ -8,6 +8,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.prosto_key.nulesschedule.R
 import com.prosto_key.nulesschedule.data.datastore.readIntFromDataStore
 import com.prosto_key.nulesschedule.data.util.isTimeBetween
 import com.prosto_key.nulesschedule.data.util.timeToLocalDateTime
@@ -76,7 +77,7 @@ constructor(
                 }
             }
             else{
-                Toast.makeText(context, "Не збережено! Новий час мусить бути у таких рамках: (${previousTime.toTimeString()}-${nextTime.toTimeString()})", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.not_saved) + " (${previousTime.toTimeString()}-${nextTime.toTimeString()})", Toast.LENGTH_SHORT).show()
             }
         }, currentDateTime.hour, currentDateTime.minute, true).show()
     }
